@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace API_and_DataBase.Models
 {
@@ -9,6 +10,9 @@ namespace API_and_DataBase.Models
         public string Password { get; set; }
         public decimal Type { get; set; }
 
+        [ForeignKey("Car")]
+        public int CarID { get; set; }
+        public virtual Car Car { get; set; }
         public virtual ICollection<ImportReciept> ImportReciepts { get; set; } = new HashSet<ImportReciept>();
         public virtual ICollection<ExportReciept> ExportReciepts { get; set; } = new HashSet<ExportReciept>();
 

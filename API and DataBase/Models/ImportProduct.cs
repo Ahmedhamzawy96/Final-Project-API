@@ -1,4 +1,6 @@
-﻿namespace API_and_DataBase.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace API_and_DataBase.Models
 {
     public class ImportProduct
     {
@@ -10,7 +12,10 @@
         public virtual ImportReciept ImportReciept { get; set; }
         public virtual Product Product { get; set; }
 
+        [ForeignKey("ImportReciept")]
         public int ReceiptID { get; set; }
+
+        [ForeignKey("Product")]
         public int ProductID { get; set; }
     }
 }
