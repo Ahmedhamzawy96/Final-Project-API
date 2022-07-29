@@ -17,6 +17,8 @@ namespace API_and_DataBase.Models
 
         [InverseProperty("CarSell")]
         public virtual ICollection<ExportReciept> SellReciepts { get; set; } = new HashSet<ExportReciept>();
+        public virtual ICollection<Users> Users { get; set; } = new HashSet<Users>();
+
 
 
 
