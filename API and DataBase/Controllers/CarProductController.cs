@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO.Extension_Methods;
+using API_and_DataBase.DTO;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,31 +24,32 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/CarProduct
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CarProduct>>> GetCarProducts()
+        public async Task<ActionResult<IEnumerable<CarProductDTO>>> GetCarProducts()
         {
-            return await _context.CarProducts.ToListAsync();
+            return await _context.CarProducts.Select(w => w.CarProductToDTO()).ToListAsync();
         }
 
         // GET: api/CarProduct/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CarProduct>> GetCarProduct(int id)
+        [HttpGet("{id}/{carID}")]
+        public async Task<ActionResult<CarProductDTO>> GetCarProduct(int id, int carID)
         {
-            var carProduct = await _context.CarProducts.FindAsync(id);
+            var carProduct = await _context.CarProducts.FirstOrDefaultAsync(A => A.ProductID == id && A.CarID == carID);
 
             if (carProduct == null)
             {
                 return NotFound();
             }
 
-            return carProduct;
+            return carProduct.CarProductToDTO();
         }
 
         // PUT: api/CarProduct/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCarProduct(int id, CarProduct carProduct)
+        [HttpPut("{id}/{carID}")]
+        public async Task<IActionResult> PutCarProduct(int id, int carID, CarProductDTO carProductDTO)
         {
-            if (id != carProduct.CarID)
+            CarProduct carProduct = carProductDTO.DTOToCarProduct();
+            if (id != carProduct.ProductID && carProduct.CarID != carID)
             {
                 return BadRequest();
             }
@@ -59,7 +62,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CarProductExists(id))
+                if (!CarProductExists(id, carID))
                 {
                     return NotFound();
                 }
@@ -75,8 +78,9 @@ namespace API_and_DataBase.Controllers
         // POST: api/CarProduct
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CarProduct>> PostCarProduct(CarProduct carProduct)
+        public async Task<ActionResult<CarProduct>> PostCarProduct(CarProductDTO carProductDTO)
         {
+            CarProduct carProduct = carProductDTO.DTOToCarProduct();
             _context.CarProducts.Add(carProduct);
             try
             {
@@ -84,7 +88,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateException)
             {
-                if (CarProductExists(carProduct.CarID))
+                if (CarProductExists(carProduct.CarID, carProduct.ProductID))
                 {
                     return Conflict();
                 }
@@ -98,10 +102,10 @@ namespace API_and_DataBase.Controllers
         }
 
         // DELETE: api/CarProduct/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCarProduct(int id)
+        [HttpDelete("{id}/{carID}")]
+        public async Task<IActionResult> DeleteCarProduct(int id, int carID)
         {
-            var carProduct = await _context.CarProducts.FindAsync(id);
+            var carProduct = await _context.CarProducts.FirstOrDefaultAsync(A => A.ProductID == id && A.CarID == carID);
             if (carProduct == null)
             {
                 return NotFound();
@@ -113,9 +117,9 @@ namespace API_and_DataBase.Controllers
             return NoContent();
         }
 
-        private bool CarProductExists(int id)
+        private bool CarProductExists(int id, int carID)
         {
-            return _context.CarProducts.Any(e => e.CarID == id);
+            return _context.CarProducts.Any(e => e.CarID == id && e.CarID == carID);
         }
     }
 }

@@ -30,7 +30,7 @@ namespace API_and_DataBase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("Account")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
@@ -70,7 +70,7 @@ namespace API_and_DataBase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("Account")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")
@@ -275,7 +275,7 @@ namespace API_and_DataBase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("Account")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Name")

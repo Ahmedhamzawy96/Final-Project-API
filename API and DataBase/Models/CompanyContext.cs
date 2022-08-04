@@ -10,6 +10,10 @@ namespace API_and_DataBase.Models
 
         }
 
+        public CompanyContext()
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ImportProduct>()
