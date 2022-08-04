@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO.Extension_Methods;
+using API_and_DataBase.DTO;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,14 +24,14 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/ImportReciept
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ImportReciept>>> GetImportReciepts()
+        public async Task<ActionResult<IEnumerable<ImportRecieptDTO>>> GetImportReciepts()
         {
-            return await _context.ImportReciepts.ToListAsync();
+            return await _context.ImportReciepts.Select(A => A.ImportRecieptToDTO()).ToListAsync();
         }
 
         // GET: api/ImportReciept/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ImportReciept>> GetImportReciept(int id)
+        public async Task<ActionResult<ImportRecieptDTO>> GetImportReciept(int id)
         {
             var importReciept = await _context.ImportReciepts.FindAsync(id);
 
@@ -38,14 +40,16 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
 
-            return importReciept;
+            return importReciept.ImportRecieptToDTO();
         }
 
         // PUT: api/ImportReciept/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutImportReciept(int id, ImportReciept importReciept)
+        public async Task<IActionResult> PutImportReciept(int id, ImportRecieptDTO importRecieptDTO)
         {
+            ImportReciept importReciept = importRecieptDTO.DTOToImportReciept();
+
             if (id != importReciept.ID)
             {
                 return BadRequest();
@@ -75,8 +79,10 @@ namespace API_and_DataBase.Controllers
         // POST: api/ImportReciept
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ImportReciept>> PostImportReciept(ImportReciept importReciept)
+        public async Task<ActionResult<ImportReciept>> PostImportReciept(ImportRecieptDTO importRecieptDTO)
         {
+            ImportReciept importReciept = importRecieptDTO.DTOToImportReciept();
+
             _context.ImportReciepts.Add(importReciept);
             await _context.SaveChangesAsync();
 

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO.Extension_Methods;
+using API_and_DataBase.DTO;
 
 namespace API_and_DataBase.Controllers
 {
@@ -14,38 +16,42 @@ namespace API_and_DataBase.Controllers
     public class CarController : ControllerBase
     {
         private readonly CompanyContext _context;
+       
+        
 
         public CarController(CompanyContext context)
         {
+       
             _context = context;
         }
 
         // GET: api/Car
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Car>>> GetCars()
+        public async Task<ActionResult<IEnumerable<CarDTO>>> GetCars()
         {
-            return await _context.Cars.ToListAsync();
+
+            return await _context.Cars.Select(w=>w.CarToDTO()).ToListAsync();
         }
 
         // GET: api/Car/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Car>> GetCar(int id)
+        public async Task<ActionResult<CarDTO>> GetCar(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
-
+            Car car = await _context.Cars.FindAsync(id);
+            
             if (car == null)
             {
                 return NotFound();
             }
-
-            return car;
+            return car.CarToDTO();
         }
 
         // PUT: api/Car/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCar(int id, Car car)
+        public async Task<IActionResult> PutCar(int id, CarDTO carDTO)
         {
+            Car car=carDTO.DTOToCar();
             if (id != car.ID)
             {
                 return BadRequest();
@@ -75,8 +81,9 @@ namespace API_and_DataBase.Controllers
         // POST: api/Car
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Car>> PostCar(Car car)
+        public async Task<ActionResult<Car>> PostCar(CarDTO carDTO)
         {
+            Car car= carDTO.DTOToCar();
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
 

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO.Extension_Methods;
+using API_and_DataBase.DTO;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,14 +24,14 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/Product
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products.Select(A => A.ProductToDTO()).ToListAsync();
         }
 
         // GET: api/Product/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
 
@@ -38,14 +40,15 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
 
-            return product;
+            return product.ProductToDTO();
         }
 
         // PUT: api/Product/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct(int id, Product product)
+        public async Task<IActionResult> PutProduct(int id, ProductDTO productDTO)
         {
+            Product product = productDTO.DTOToProduct();
             if (id != product.ID)
             {
                 return BadRequest();
@@ -75,8 +78,9 @@ namespace API_and_DataBase.Controllers
         // POST: api/Product
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public async Task<ActionResult<Product>> PostProduct(ProductDTO productDTO)
         {
+            Product product = productDTO.DTOToProduct();
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
 

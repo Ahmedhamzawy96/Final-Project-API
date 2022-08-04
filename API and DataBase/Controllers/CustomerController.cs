@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO;
+using API_and_DataBase.DTO.Extension_Methods;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,14 +24,14 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/Customer
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
-            return await _context.Customers.ToListAsync();
+            return await _context.Customers.Select(w=>w.CustomerToDTO()).ToListAsync();
         }
 
         // GET: api/Customer/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public async Task<ActionResult<CustomerDTO>> GetCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
 
@@ -38,14 +40,15 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
 
-            return customer;
+            return customer.CustomerToDTO();
         }
 
         // PUT: api/Customer/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, Customer customer)
+        public async Task<IActionResult> PutCustomer(int id, CustomerDTO customerDTO)
         {
+            Customer customer = customerDTO.DTOToCustomer();
             if (id != customer.ID)
             {
                 return BadRequest();
@@ -75,8 +78,9 @@ namespace API_and_DataBase.Controllers
         // POST: api/Customer
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        public async Task<ActionResult<Customer>> PostCustomer(CustomerDTO customerDTO)
         {
+            Customer customer = customerDTO.DTOToCustomer();
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
 

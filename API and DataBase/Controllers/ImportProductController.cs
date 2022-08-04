@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
-
+using API_and_DataBase.DTO;
+using API_and_DataBase.DTO.Extension_Methods;
 namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
@@ -22,31 +23,33 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/ImportProduct
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ImportProduct>>> GetImportProducts()
+        public async Task<ActionResult<IEnumerable<ImportProductDTO>>> GetImportProducts()
         {
-            return await _context.ImportProducts.ToListAsync();
+            return await _context.ImportProducts.Select(A => A.ImportProductToDTO()).ToListAsync();
         }
 
         // GET: api/ImportProduct/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ImportProduct>> GetImportProduct(int id)
+        [HttpGet("{id}/{ReceiptID}")]
+        public async Task<ActionResult<ImportProductDTO>> GetImportProduct(int id, int ReceiptID)
         {
-            var importProduct = await _context.ImportProducts.FindAsync(id);
+            var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(w=>w.ProductID==id&&w.ReceiptID==ReceiptID);
 
             if (importProduct == null)
             {
                 return NotFound();
             }
 
-            return importProduct;
+            return importProduct.ImportProductToDTO();
         }
 
         // PUT: api/ImportProduct/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutImportProduct(int id, ImportProduct importProduct)
+        [HttpPut("{id}/{ReceiptID}")]
+        public async Task<IActionResult> PutImportProduct(int id, int ReceiptID, ImportProductDTO importProductDTO)
         {
-            if (id != importProduct.ReceiptID)
+            ImportProduct importProduct = importProductDTO.DTOToImportProduct();
+
+            if (id != importProduct.ProductID &&ReceiptID!=importProduct.ReceiptID)
             {
                 return BadRequest();
             }
@@ -59,7 +62,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ImportProductExists(id))
+                if (!ImportProductExists(id,ReceiptID))
                 {
                     return NotFound();
                 }
@@ -75,8 +78,9 @@ namespace API_and_DataBase.Controllers
         // POST: api/ImportProduct
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ImportProduct>> PostImportProduct(ImportProduct importProduct)
+        public async Task<ActionResult<ImportProduct>> PostImportProduct( ImportProductDTO importProductDTO)
         {
+            ImportProduct importProduct = importProductDTO.DTOToImportProduct();
             _context.ImportProducts.Add(importProduct);
             try
             {
@@ -84,7 +88,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateException)
             {
-                if (ImportProductExists(importProduct.ReceiptID))
+                if (ImportProductExists(importProduct.ProductID, importProduct.ReceiptID))
                 {
                     return Conflict();
                 }
@@ -98,10 +102,10 @@ namespace API_and_DataBase.Controllers
         }
 
         // DELETE: api/ImportProduct/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteImportProduct(int id)
+        [HttpDelete("{id}/{ReceiptID}")]
+        public async Task<IActionResult> DeleteImportProduct(int id ,int ReceiptID)
         {
-            var importProduct = await _context.ImportProducts.FindAsync(id);
+            var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(w => w.ProductID == id && w.ReceiptID == ReceiptID);
             if (importProduct == null)
             {
                 return NotFound();
@@ -113,9 +117,9 @@ namespace API_and_DataBase.Controllers
             return NoContent();
         }
 
-        private bool ImportProductExists(int id)
+        private bool ImportProductExists(int id, int ReceiptID)
         {
-            return _context.ImportProducts.Any(e => e.ReceiptID == id);
+            return _context.ImportProducts.Any(e => e.ProductID == id&&e.ReceiptID==ReceiptID);
         }
     }
 }

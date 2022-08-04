@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO;
+using API_and_DataBase.DTO.Extension_Methods;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,14 +24,14 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/Supplier
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Supplier>>> GetSuppliers()
+        public async Task<ActionResult<IEnumerable<SupplierDTO>>> GetSuppliers()
         {
-            return await _context.Suppliers.ToListAsync();
+            return await _context.Suppliers.Select(w=>w.SupplierToDTO()).ToListAsync();
         }
 
         // GET: api/Supplier/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Supplier>> GetSupplier(int id)
+        public async Task<ActionResult<SupplierDTO>> GetSupplier(int id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
 
@@ -38,14 +40,15 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
 
-            return supplier;
+            return supplier.SupplierToDTO();
         }
 
         // PUT: api/Supplier/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSupplier(int id, Supplier supplier)
+        public async Task<IActionResult> PutSupplier(int id, SupplierDTO supplierDTO)
         {
+            Supplier supplier = supplierDTO.DTOToSupplier();
             if (id != supplier.ID)
             {
                 return BadRequest();
@@ -75,8 +78,9 @@ namespace API_and_DataBase.Controllers
         // POST: api/Supplier
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Supplier>> PostSupplier(Supplier supplier)
+        public async Task<ActionResult<Supplier>> PostSupplier(SupplierDTO supplierDTO)
         {
+            Supplier supplier = supplierDTO.DTOToSupplier();
             _context.Suppliers.Add(supplier);
             await _context.SaveChangesAsync();
 

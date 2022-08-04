@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO;
+using API_and_DataBase.DTO.Extension_Methods;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,14 +24,14 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Users>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UsersDTO>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Select(w=>w.UsersToDTO()).ToListAsync();
         }
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Users>> GetUsers(string id)
+        public async Task<ActionResult<UsersDTO>> GetUsers(string id)
         {
             var users = await _context.Users.FindAsync(id);
 
@@ -38,14 +40,15 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
 
-            return users;
+            return users.UsersToDTO();
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers(string id, Users users)
+        public async Task<IActionResult> PutUsers(string id, UsersDTO usersDTO)
         {
+            Users users = usersDTO.DTOToUsers();
             if (id != users.UserName)
             {
                 return BadRequest();
@@ -75,8 +78,10 @@ namespace API_and_DataBase.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Users>> PostUsers(Users users)
+        public async Task<ActionResult<Users>> PostUsers(UsersDTO usersDTO)
         {
+            Users users = usersDTO.DTOToUsers();
+
             _context.Users.Add(users);
             try
             {

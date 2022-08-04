@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.DTO;
+using API_and_DataBase.DTO.Extension_Methods;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,31 +24,32 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/ExportProduct
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ExportProduct>>> GetExportProducts()
+        public async Task<ActionResult<IEnumerable<ExportProductDTO>>> GetExportProducts()
         {
-            return await _context.ExportProducts.ToListAsync();
+            return await _context.ExportProducts.Select(w=>w.ExportProductToDTO()).ToListAsync();
         }
 
         // GET: api/ExportProduct/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<ExportProduct>> GetExportProduct(int id)
+        [HttpGet("{id}/{ReceiptID}")]
+        public async Task<ActionResult<ExportProductDTO>> GetExportProduct(int id,int ReceiptID)
         {
-            var exportProduct = await _context.ExportProducts.FindAsync(id);
+            var exportProduct = await _context.ExportProducts.FirstOrDefaultAsync(w=>w.ProductID==id &&w.ReceiptID==ReceiptID);
 
             if (exportProduct == null)
             {
                 return NotFound();
             }
 
-            return exportProduct;
+            return exportProduct.ExportProductToDTO();
         }
 
         // PUT: api/ExportProduct/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutExportProduct(int id, ExportProduct exportProduct)
+        [HttpPut("{id}/{ReceiptID}")]
+        public async Task<IActionResult> PutExportProduct(int id, int ReceiptID, ExportProductDTO exportProductDTO)
         {
-            if (id != exportProduct.ReceiptID)
+            ExportProduct exportProduct = exportProductDTO.DTOToExportProduct();
+            if (id != exportProduct.ProductID && ReceiptID!=exportProduct.ReceiptID)
             {
                 return BadRequest();
             }
@@ -59,7 +62,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ExportProductExists(id))
+                if (!ExportProductExists(id, ReceiptID))
                 {
                     return NotFound();
                 }
@@ -75,8 +78,10 @@ namespace API_and_DataBase.Controllers
         // POST: api/ExportProduct
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ExportProduct>> PostExportProduct(ExportProduct exportProduct)
+        public async Task<ActionResult<ExportProduct>> PostExportProduct(ExportProductDTO exportProductDTO)
         {
+            ExportProduct exportProduct = exportProductDTO.DTOToExportProduct();
+
             _context.ExportProducts.Add(exportProduct);
             try
             {
@@ -84,7 +89,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateException)
             {
-                if (ExportProductExists(exportProduct.ReceiptID))
+                if (ExportProductExists(exportProduct.ProductID,exportProduct.ReceiptID))
                 {
                     return Conflict();
                 }
@@ -98,10 +103,10 @@ namespace API_and_DataBase.Controllers
         }
 
         // DELETE: api/ExportProduct/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteExportProduct(int id)
+        [HttpDelete("{id}/{ReceiptID}")]
+        public async Task<IActionResult> DeleteExportProduct(int id, int ReceiptID)
         {
-            var exportProduct = await _context.ExportProducts.FindAsync(id);
+            var exportProduct = await _context.ExportProducts.FirstOrDefaultAsync(w => w.ProductID == id && w.ReceiptID == ReceiptID);
             if (exportProduct == null)
             {
                 return NotFound();
@@ -113,9 +118,9 @@ namespace API_and_DataBase.Controllers
             return NoContent();
         }
 
-        private bool ExportProductExists(int id)
+        private bool ExportProductExists(int id, int ReceiptID)
         {
-            return _context.ExportProducts.Any(e => e.ReceiptID == id);
+            return _context.ExportProducts.Any(e => e.ReceiptID == ReceiptID && e.ProductID==id);
         }
     }
 }
