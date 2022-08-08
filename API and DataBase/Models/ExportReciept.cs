@@ -13,8 +13,6 @@ namespace API_and_DataBase.Models
         public decimal Paid { get; set; }
         public decimal Remaining { get; set; }
 
-
-
         public virtual Customer Customer { get; set; }
         public virtual Users User { get; set; }
 

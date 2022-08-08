@@ -8,7 +8,7 @@
 
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
-        public decimal BuyinglPrice { get; set; }
+        public decimal BuyingPrice { get; set; }
 
     }
 }

@@ -26,7 +26,8 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ImportRecieptDTO>>> GetImportReciepts()
         {
-            return await _context.ImportReciepts.Select(A => A.ImportRecieptToDTO()).ToListAsync();
+            return await _context.ImportReciepts.Select(A=>A.ImportRecieptToDTO()).ToListAsync();
+
         }
 
         // GET: api/ImportReciept/5

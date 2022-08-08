@@ -79,7 +79,7 @@ namespace API_and_DataBase.Controllers
         }
 
         // POST: api/Car
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<Car>> PostCar(CarDTO carDTO)
         {

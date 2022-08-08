@@ -8,7 +8,7 @@ namespace API_and_DataBase.Models
         [Key]
         public string UserName { get; set; }
         public string Password { get; set; }
-        public decimal Type { get; set; }
+        public string Type { get; set; }
 
         [ForeignKey("Car")]
         public int CarID { get; set; }

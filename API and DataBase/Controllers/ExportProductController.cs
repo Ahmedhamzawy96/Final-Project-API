@@ -30,10 +30,11 @@ namespace API_and_DataBase.Controllers
         }
 
         // GET: api/ExportProduct/5
-        [HttpGet("{id}/{ReceiptID}")]
-        public async Task<ActionResult<ExportProductDTO>> GetExportProduct(int id,int ReceiptID)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ExportProductDTO>> GetExportProduct(int id)
         {
-            var exportProduct = await _context.ExportProducts.FirstOrDefaultAsync(w=>w.ProductID==id &&w.ReceiptID==ReceiptID);
+            var exportProduct = await _context.ExportProducts.FindAsync(id);
+
 
             if (exportProduct == null)
             {
@@ -45,6 +46,7 @@ namespace API_and_DataBase.Controllers
 
         // PUT: api/ExportProduct/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}/{ReceiptID}")]
         public async Task<IActionResult> PutExportProduct(int id, int ReceiptID, ExportProductDTO exportProductDTO)
         {
@@ -62,6 +64,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+
                 if (!ExportProductExists(id, ReceiptID))
                 {
                     return NotFound();
@@ -89,6 +92,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateException)
             {
+
                 if (ExportProductExists(exportProduct.ProductID,exportProduct.ReceiptID))
                 {
                     return Conflict();
@@ -103,6 +107,7 @@ namespace API_and_DataBase.Controllers
         }
 
         // DELETE: api/ExportProduct/5
+
         [HttpDelete("{id}/{ReceiptID}")]
         public async Task<IActionResult> DeleteExportProduct(int id, int ReceiptID)
         {
@@ -117,6 +122,7 @@ namespace API_and_DataBase.Controllers
 
             return NoContent();
         }
+
 
         private bool ExportProductExists(int id, int ReceiptID)
         {

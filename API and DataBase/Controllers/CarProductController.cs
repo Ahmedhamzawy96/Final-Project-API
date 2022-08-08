@@ -23,17 +23,32 @@ namespace API_and_DataBase.Controllers
         }
 
         // GET: api/CarProduct
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CarProductDTO>>> GetCarProducts()
+        [HttpGet("{carID}")]
+        public ActionResult<IEnumerable<CarProductDTO>> GetCarProducts(int carID)
         {
-            return await _context.CarProducts.Select(w => w.CarProductToDTO()).ToListAsync();
-        }
+
+            var CarProducts = from P in _context.Products
+                              join CP in _context.CarProducts.Where(A => A.CarID == carID)
+                              on P.ID equals CP.ProductID
+                              select new CarProductDTO
+                              {
+                                  CarID = CP.CarID,
+                                  ProductID = CP.ProductID,
+                                  ProductName = P.Name,
+                                  Quantity = CP.Quantity
+                              };
+
+
+            return Ok(CarProducts);
+        }            
 
         // GET: api/CarProduct/5
         [HttpGet("{id}/{carID}")]
-        public async Task<ActionResult<CarProductDTO>> GetCarProduct(int id, int carID)
+        public async Task<ActionResult<CarProductDTO>> GetCarProduct( int id ,int carID)
         {
-            var carProduct = await _context.CarProducts.FirstOrDefaultAsync(A => A.ProductID == id && A.CarID == carID);
+            var carProduct = await _context.CarProducts.FirstOrDefaultAsync(A=> A.ProductID == id && A.CarID == carID);
+
+
 
             if (carProduct == null)
             {
@@ -46,7 +61,8 @@ namespace API_and_DataBase.Controllers
         // PUT: api/CarProduct/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}/{carID}")]
-        public async Task<IActionResult> PutCarProduct(int id, int carID, CarProductDTO carProductDTO)
+        public async Task<IActionResult> PutCarProduct(int id,int carID, CarProductDTO carProductDTO)
+
         {
             CarProduct carProduct = carProductDTO.DTOToCarProduct();
             if (id != carProduct.ProductID && carProduct.CarID != carID)
@@ -76,7 +92,7 @@ namespace API_and_DataBase.Controllers
         }
 
         // POST: api/CarProduct
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<CarProduct>> PostCarProduct(CarProductDTO carProductDTO)
         {
@@ -98,14 +114,16 @@ namespace API_and_DataBase.Controllers
                 }
             }
 
-            return CreatedAtAction("GetCarProduct", new { id = carProduct.CarID }, carProduct);
+            return CreatedAtAction("GetCarProduct", new { id = carProduct.CarID, carID = carProduct.CarID }, carProduct);
+
         }
 
         // DELETE: api/CarProduct/5
         [HttpDelete("{id}/{carID}")]
-        public async Task<IActionResult> DeleteCarProduct(int id, int carID)
+        public async Task<IActionResult> DeleteCarProduct(int id , int carID)
         {
-            var carProduct = await _context.CarProducts.FirstOrDefaultAsync(A => A.ProductID == id && A.CarID == carID);
+            var carProduct = await _context.CarProducts.FirstOrDefaultAsync(A=> A.ProductID == id && A.CarID == carID);
+
             if (carProduct == null)
             {
                 return NotFound();
@@ -117,7 +135,8 @@ namespace API_and_DataBase.Controllers
             return NoContent();
         }
 
-        private bool CarProductExists(int id, int carID)
+        private bool CarProductExists(int id , int carID)
+
         {
             return _context.CarProducts.Any(e => e.CarID == id && e.CarID == carID);
         }

@@ -26,7 +26,8 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            return await _context.Products.Select(A => A.ProductToDTO()).ToListAsync();
+            return await _context.Products.Select(A=> A.ProductToDTO()).ToListAsync();
+
         }
 
         // GET: api/Product/5

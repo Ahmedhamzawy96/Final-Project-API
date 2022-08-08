@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
 using API_and_DataBase.DTO;
 using API_and_DataBase.DTO.Extension_Methods;
+
 namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
@@ -25,8 +26,12 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ImportProductDTO>>> GetImportProducts()
         {
-            return await _context.ImportProducts.Select(A => A.ImportProductToDTO()).ToListAsync();
+
+            return await _context.ImportProducts.Select(A=> A.ImportProductToDTO()).ToListAsync();
         }
+
+        // GET: api/ImportProduct/5
+
 
         // GET: api/ImportProduct/5
         [HttpGet("{id}/{ReceiptID}")]
@@ -44,6 +49,7 @@ namespace API_and_DataBase.Controllers
 
         // PUT: api/ImportProduct/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPut("{id}/{ReceiptID}")]
         public async Task<IActionResult> PutImportProduct(int id, int ReceiptID, ImportProductDTO importProductDTO)
         {
@@ -62,6 +68,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+
                 if (!ImportProductExists(id,ReceiptID))
                 {
                     return NotFound();
@@ -78,7 +85,8 @@ namespace API_and_DataBase.Controllers
         // POST: api/ImportProduct
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ImportProduct>> PostImportProduct( ImportProductDTO importProductDTO)
+        public async Task<ActionResult<ImportProduct>> PostImportProduct(ImportProductDTO importProductDTO)
+
         {
             ImportProduct importProduct = importProductDTO.DTOToImportProduct();
             _context.ImportProducts.Add(importProduct);
@@ -88,6 +96,7 @@ namespace API_and_DataBase.Controllers
             }
             catch (DbUpdateException)
             {
+
                 if (ImportProductExists(importProduct.ProductID, importProduct.ReceiptID))
                 {
                     return Conflict();
@@ -102,6 +111,7 @@ namespace API_and_DataBase.Controllers
         }
 
         // DELETE: api/ImportProduct/5
+
         [HttpDelete("{id}/{ReceiptID}")]
         public async Task<IActionResult> DeleteImportProduct(int id ,int ReceiptID)
         {
@@ -116,6 +126,7 @@ namespace API_and_DataBase.Controllers
 
             return NoContent();
         }
+
 
         private bool ImportProductExists(int id, int ReceiptID)
         {
