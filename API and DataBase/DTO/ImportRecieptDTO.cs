@@ -12,5 +12,6 @@
         public int? SUPID { get; set; }
 
         public string UserName { get; set; }
+        public ImportProductDTO[] importProducts { get; set; }
     }
 }

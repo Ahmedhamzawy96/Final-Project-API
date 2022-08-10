@@ -83,11 +83,35 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<ImportReciept>> PostImportReciept(ImportRecieptDTO importRecieptDTO)
         {
             ImportReciept importReciept = importRecieptDTO.DTOToImportReciept();
-
+            Transactions tr = new Transactions()
+            {
+                ReceiptID = importReciept.ID,
+                Amount = importReciept.Remaining,
+                Date = importReciept.Date,
+                ReceiptType = "Import",
+                User = importReciept.UserName,
+                Type = "فاتوره شراء",
+                Receiver = _context.Customers.Where(w => w.ID == importReciept.SupplierID).Select(w => w.Name).FirstOrDefault()
+            };
+            Supplier sup = _context.Suppliers.Find(importReciept.SupplierID);
+            sup.Account += importReciept.Remaining;
+            _context.Entry(sup).State = EntityState.Modified;
+            _context.Transactions.Add(tr);
             _context.ImportReciepts.Add(importReciept);
             await _context.SaveChangesAsync();
+            foreach (var item in importRecieptDTO.importProducts)
+            {
 
-            return CreatedAtAction("GetImportReciept", new { id = importReciept.ID }, importReciept);
+                item.ImportReceiptID = importReciept.ID;
+                _context.ImportProducts.Add(item.DTOToImportProduct());
+
+                Product product = _context.Products.Find(item.ProductID);
+                product.Quantity -= item.Quantity;
+                _context.Entry(product).State = EntityState.Modified;
+            }
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetImportReciept", new { id = importReciept.ID }, importReciept.ImportRecieptToDTO());
         }
 
         // DELETE: api/ImportReciept/5

@@ -88,10 +88,13 @@ namespace API_and_DataBase.Controllers
                 Date = exportReciept.Date,
                 ReceiptType = "Export",
                 User = exportReciept.UserName,
-                Type = "فاتوره شراء",
+                Type = "فاتوره بيع",
                 Receiver = _context.Customers.Where(w => w.ID == exportReciept.CustomerID).Select(w => w.Name).FirstOrDefault()
             };
 
+            Customer Cust = _context.Customers.Find(exportReciept.CustomerID);
+            Cust.Account += exportReciept.Remaining;
+            _context.Entry(Cust).State = EntityState.Modified;
             _context.ExportReciepts.Add(exportReciept);
             _context.Transactions.Add(tr);
             await _context.SaveChangesAsync();
