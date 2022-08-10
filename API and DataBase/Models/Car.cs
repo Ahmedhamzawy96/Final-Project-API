@@ -13,11 +13,8 @@ namespace API_and_DataBase.Models
 
         public virtual ICollection<CarProduct> CarProducts { get; set; } = new HashSet<CarProduct>();//API GET products of car  (id car )
 
-        [InverseProperty("CarBuy")]
-        public virtual ICollection<ExportReciept> BuyReciepts { get; set; } = new HashSet<ExportReciept>();
+        public virtual ICollection<ExportReciept> ExportReciepts { get; set; } = new HashSet<ExportReciept>();
 
-        [InverseProperty("CarSell")]
-        public virtual ICollection<ExportReciept> SellReciepts { get; set; } = new HashSet<ExportReciept>();
         public virtual ICollection<Users> Users { get; set; } = new HashSet<Users>();
     }
 }
