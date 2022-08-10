@@ -143,7 +143,6 @@ namespace API_and_DataBase.DTO.Extension_Methods
             else
             {
                 ExportProduct exportProduct = new ExportProduct();
-
                 exportProduct.Quantity = exportProductDTO.Quantity;
                 exportProduct.TotalPrice = exportProductDTO.TotalPrice;
                 exportProduct.Price = exportProductDTO.ProductPrice;
@@ -315,6 +314,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     CustomerID = exportRecieptDTO.CustID,
                     UserName = exportRecieptDTO.UserName,
                     CarID = exportRecieptDTO.CarID,
+                    
                 };
             }
             else

@@ -10,8 +10,7 @@ string ploicy = " ";
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=.;database=ElMokhtarDB;user id=Hamzawy;password=Hamzawy9678"));
-//builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=.;database=ElMokhtarDB;trusted_coneection:true));
+builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=.;database=ElMokhtarDB;Trusted_Connection=True"));
 
 
 builder.Services.AddCors(options => options.AddPolicy(ploicy, builder =>

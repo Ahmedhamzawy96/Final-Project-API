@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API_and_DataBase.Migrations
 {
-    public partial class IntialCreate : Migration
+    public partial class intial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,7 +16,7 @@ namespace API_and_DataBase.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Account = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -32,7 +32,7 @@ namespace API_and_DataBase.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Account = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -77,7 +77,7 @@ namespace API_and_DataBase.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Account = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
@@ -110,7 +110,7 @@ namespace API_and_DataBase.Migrations
                 {
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CarID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -162,20 +162,14 @@ namespace API_and_DataBase.Migrations
                     Remaining = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CarSellID = table.Column<int>(type: "int", nullable: true),
-                    CarBuyID = table.Column<int>(type: "int", nullable: true)
+                    CarID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ExportReciepts", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_ExportReciepts_Cars_CarBuyID",
-                        column: x => x.CarBuyID,
-                        principalTable: "Cars",
-                        principalColumn: "ID");
-                    table.ForeignKey(
-                        name: "FK_ExportReciepts_Cars_CarSellID",
-                        column: x => x.CarSellID,
+                        name: "FK_ExportReciepts_Cars_CarID",
+                        column: x => x.CarID,
                         principalTable: "Cars",
                         principalColumn: "ID");
                     table.ForeignKey(
@@ -289,14 +283,9 @@ namespace API_and_DataBase.Migrations
                 column: "ProductID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ExportReciepts_CarBuyID",
+                name: "IX_ExportReciepts_CarID",
                 table: "ExportReciepts",
-                column: "CarBuyID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExportReciepts_CarSellID",
-                table: "ExportReciepts",
-                column: "CarSellID");
+                column: "CarID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExportReciepts_CustomerID",

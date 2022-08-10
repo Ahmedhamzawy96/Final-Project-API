@@ -81,8 +81,30 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<ExportReciept>> PostExportReciept(ExportRecieptDTO exportRecieptDTO)
         {
             ExportReciept exportReciept = exportRecieptDTO.DTOToExportReciept();
+            Transactions tr = new Transactions()
+            {
+                ReceiptID = exportReciept.ID,
+                Amount = exportReciept.Remaining,
+                Date = exportReciept.Date,
+                ReceiptType = "Export",
+                User = exportReciept.UserName,
+                Type = "فاتوره شراء",
+                Receiver = _context.Customers.Where(w => w.ID == exportReciept.CustomerID).Select(w => w.Name).FirstOrDefault()
+            };
 
             _context.ExportReciepts.Add(exportReciept);
+            _context.Transactions.Add(tr);
+            await _context.SaveChangesAsync();
+            foreach (var item in exportRecieptDTO.Products)
+            {
+
+                item.ExportReceiptID = exportReciept.ID;
+                _context.ExportProducts.Add(item.DTOToExportProduct());
+
+                Product product=_context.Products.Find(item.ProductID);
+                product.Quantity -= item.Quantity;
+                _context.Entry(product).State = EntityState.Modified;
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetExportReciept", new { id = exportReciept.ID }, exportReciept);
