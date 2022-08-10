@@ -30,8 +30,6 @@ namespace API_and_DataBase.Controllers
             return await _context.ImportProducts.Select(A=> A.ImportProductToDTO()).ToListAsync();
         }
 
-        // GET: api/ImportProduct/5
-
 
         // GET: api/ImportProduct/5
         [HttpGet("{id}/{ReceiptID}")]
@@ -85,30 +83,35 @@ namespace API_and_DataBase.Controllers
         // POST: api/ImportProduct
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ImportProduct>> PostImportProduct(ImportProductDTO importProductDTO)
+        public async Task<ActionResult<ImportProduct>> PostImportProduct(ImportProductDTO[] importProductDTO)
 
         {
-            ImportProduct importProduct = importProductDTO.DTOToImportProduct();
-            _context.ImportProducts.Add(importProduct);
-            try
+            foreach ( var item in importProductDTO)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
+                ImportProduct importProduct = item.DTOToImportProduct();
 
-                if (ImportProductExists(importProduct.ProductID, importProduct.ReceiptID))
+                _context.ImportProducts.Add(importProduct);
+                try
                 {
-                    return Conflict();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateException)
                 {
-                    throw;
+
+                    if (ImportProductExists(importProduct.ProductID, importProduct.ReceiptID))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
             }
 
-            return CreatedAtAction("GetImportProduct", new { id = importProduct.ReceiptID }, importProduct);
+            return NoContent();
         }
+
 
         // DELETE: api/ImportProduct/5
 

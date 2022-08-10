@@ -81,29 +81,33 @@ namespace API_and_DataBase.Controllers
         // POST: api/ExportProduct
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ExportProduct>> PostExportProduct(ExportProductDTO exportProductDTO)
+        public async Task<ActionResult<ExportProduct>> PostExportProduct(ExportProductDTO[] exportProductDTO)
         {
-            ExportProduct exportProduct = exportProductDTO.DTOToExportProduct();
-
-            _context.ExportProducts.Add(exportProduct);
-            try
+            foreach(var item in exportProductDTO)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
+                ExportProduct exportProduct = item.DTOToExportProduct();
 
-                if (ExportProductExists(exportProduct.ProductID,exportProduct.ReceiptID))
+                _context.ExportProducts.Add(exportProduct);
+                try
                 {
-                    return Conflict();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateException)
                 {
-                    throw;
+
+                    if (ExportProductExists(exportProduct.ProductID,exportProduct.ReceiptID))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+
             }
 
-            return CreatedAtAction("GetExportProduct", new { id = exportProduct.ReceiptID }, exportProduct);
+            return NoContent();
         }
 
         // DELETE: api/ExportProduct/5

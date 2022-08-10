@@ -94,27 +94,31 @@ namespace API_and_DataBase.Controllers
         // POST: api/CarProduct
 
         [HttpPost]
-        public async Task<ActionResult<CarProduct>> PostCarProduct(CarProductDTO carProductDTO)
+        public async Task<ActionResult<CarProduct>> PostCarProduct(CarProductDTO[] carProductDTO)
         {
-            CarProduct carProduct = carProductDTO.DTOToCarProduct();
-            _context.CarProducts.Add(carProduct);
-            try
+            foreach(var item in carProductDTO)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (CarProductExists(carProduct.CarID, carProduct.ProductID))
+                CarProduct carProduct = item.DTOToCarProduct();
+                _context.CarProducts.Add(carProduct);
+                try
                 {
-                    return Conflict();
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateException)
                 {
-                    throw;
+                    if (CarProductExists(carProduct.CarID, carProduct.ProductID))
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
+
             }
 
-            return CreatedAtAction("GetCarProduct", new { id = carProduct.CarID, carID = carProduct.CarID }, carProduct);
+            return NoContent();
 
         }
 

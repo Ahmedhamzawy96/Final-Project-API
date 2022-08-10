@@ -16,12 +16,7 @@ namespace API_and_DataBase.Models
         public virtual Customer Customer { get; set; }
         public virtual Users User { get; set; }
 
-        [InverseProperty("SellReciepts")]
-        public virtual Car CarSell { get; set; }
-
-        [InverseProperty("BuyReciepts")]
-        public virtual Car CarBuy { get; set; }
-
+        public virtual Car Car { get; set; }
 
 
         [ForeignKey("Customer")]
@@ -29,9 +24,7 @@ namespace API_and_DataBase.Models
         [ForeignKey("User")]
         public string UserName { get; set; }
         [ForeignKey("Car")]
-        public int? CarSellID { get; set; }
-        [ForeignKey("Car")]
-        public int? CarBuyID { get; set; }
+        public int? CarID { get; set; }
         public virtual ICollection<ExportProduct> ExportProducts { get; set; } = new HashSet<ExportProduct>();
     }
 }

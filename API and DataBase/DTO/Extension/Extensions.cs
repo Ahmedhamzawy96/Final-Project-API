@@ -282,15 +282,14 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ExportRecieptDTO
                 {
                     ID = exportReciept.ID,
-                    Date = exportReciept.Date,
+                    Date = exportReciept.Date.ToString(),
                     Total = exportReciept.Total,
                     Notes = exportReciept.Notes,
                     Paid = exportReciept.Paid,
                     Remaining = exportReciept.Remaining,
                     CustID = exportReciept.CustomerID,
                     UserName = exportReciept.UserName,
-                    CarSellID = exportReciept.CarSellID,
-                    CarBuyID = exportReciept.CarBuyID
+                    CarID = exportReciept.CarID,
                 };
             }
             else
@@ -308,15 +307,14 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ExportReciept
                 {
                     ID = exportRecieptDTO.ID,
-                    Date = exportRecieptDTO.Date,
+                    Date = Convert.ToDateTime(exportRecieptDTO.Date),
                     Total = exportRecieptDTO.Total,
                     Notes = exportRecieptDTO.Notes,
                     Paid = exportRecieptDTO.Paid,
                     Remaining = exportRecieptDTO.Remaining,
                     CustomerID = exportRecieptDTO.CustID,
                     UserName = exportRecieptDTO.UserName,
-                    CarSellID = exportRecieptDTO.CarSellID,
-                    CarBuyID = exportRecieptDTO.CarBuyID,
+                    CarID = exportRecieptDTO.CarID,
                 };
             }
             else
@@ -336,7 +334,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ImportRecieptDTO
                 {
                     ID = importReciept.ID,
-                    Date = importReciept.Date,
+                    Date = importReciept.Date.ToString(),
                     Total = importReciept.Total,
                     Notes = importReciept.Notes,
                     Paid = importReciept.Paid,
@@ -360,7 +358,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ImportReciept
                 {
                     ID = importRecieptDTO.ID,
-                    Date = importRecieptDTO.Date,
+                    Date = Convert.ToDateTime(importRecieptDTO.Date),
                     Total = importRecieptDTO.Total,
                     Notes = importRecieptDTO.Notes,
                     Paid = importRecieptDTO.Paid,
