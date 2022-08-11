@@ -11,7 +11,7 @@ namespace API_and_DataBase.Models
 
         [ForeignKey("Car")]
 
-        public int CarID { get; set; }
+        public int? CarID { get; set; }
 
         [ForeignKey("Product")]
         public int ProductID { get; set; }

@@ -34,14 +34,16 @@ namespace API_and_DataBase.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ImportRecieptDTO>> GetImportReciept(int id)
         {
-            var importReciept = await _context.ImportReciepts.FindAsync(id);
+            var imporReciept = await _context.ImportReciepts.FindAsync(id);
+            List<ImportProduct> importproducts = _context.ImportProducts.Where(w => w.ReceiptID == id).ToList();
 
-            if (importReciept == null)
+            if (imporReciept == null)
             {
                 return NotFound();
             }
-
-            return importReciept.ImportRecieptToDTO();
+            ImportRecieptDTO importRecieptDTO = imporReciept.ImportRecieptToDTO();
+            importRecieptDTO.importProducts = importproducts.Select(A => A.ImportProductToDTO()).ToArray();
+            return importRecieptDTO;
         }
 
         // PUT: api/ImportReciept/5
