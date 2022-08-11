@@ -286,9 +286,10 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     Notes = exportReciept.Notes,
                     Paid = exportReciept.Paid,
                     Remaining = exportReciept.Remaining,
-                    CustID = exportReciept.CustomerID,
+                    customerID= exportReciept.CustomerID,
                     UserName = exportReciept.UserName,
                     CarID = exportReciept.CarID,
+                  
                 };
             }
             else
@@ -311,7 +312,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     Notes = exportRecieptDTO.Notes,
                     Paid = exportRecieptDTO.Paid,
                     Remaining = exportRecieptDTO.Remaining,
-                    CustomerID = exportRecieptDTO.CustID,
+                    CustomerID = exportRecieptDTO.customerID,
                     UserName = exportRecieptDTO.UserName,
                     CarID = exportRecieptDTO.CarID,
                     

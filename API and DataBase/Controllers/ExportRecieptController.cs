@@ -26,6 +26,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExportRecieptDTO>>> GetExportReciepts()
         {
+
             return await _context.ExportReciepts.Select(w=>w.ExportRecieptToDTO()).ToListAsync();
         }
 
@@ -34,15 +35,16 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<ExportRecieptDTO>> GetExportReciept(int id)
         {
             var exportReciept = await _context.ExportReciepts.FindAsync(id);
-
+           List<ExportProduct> exportproducts =  _context.ExportProducts.Where(w=>w.ReceiptID==id).ToList();
+            
             if (exportReciept == null)
             {
                 return NotFound();
             }
-
+            ExportRecieptDTO exportRecieptDTO = exportReciept.ExportRecieptToDTO();
+            exportRecieptDTO.Products =exportproducts.Select(w=>w.ExportProductToDTO()).ToArray();
             return exportReciept.ExportRecieptToDTO();
         }
-
         // PUT: api/ExportReciept/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -53,9 +55,7 @@ namespace API_and_DataBase.Controllers
             {
                 return BadRequest();
             }
-
             _context.Entry(exportReciept).State = EntityState.Modified;
-
             try
             {
                 await _context.SaveChangesAsync();
@@ -71,29 +71,54 @@ namespace API_and_DataBase.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
-
         // POST: api/ExportReciept
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ExportReciept>> PostExportReciept(ExportRecieptDTO exportRecieptDTO)
         {
             ExportReciept exportReciept = exportRecieptDTO.DTOToExportReciept();
-            Transactions tr = new Transactions()
+            Transactions tr = new Transactions();
+
+            if (exportReciept.CarID==null)
             {
-                ReceiptID = exportReciept.ID,
-                Amount = exportReciept.Remaining,
-                Date = exportReciept.Date,
-                ReceiptType = "Export",
-                User = exportReciept.UserName,
-                Type = "فاتوره شراء",
-                Receiver = _context.Customers.Where(w => w.ID == exportReciept.CustomerID).Select(w => w.Name).FirstOrDefault()
-            };
+                Customer Cust = _context.Customers.Find(exportReciept.CustomerID);
+                tr = new Transactions()
+                {
+                    ReceiptID = exportReciept.ID,
+                    Amount = exportReciept.Remaining,
+                    Date = exportReciept.Date,
+                    ReceiptType = "Export",
+                    User = exportReciept.UserName,
+                    Type = " فاتوره بيع لاشخاص",
+                    Receiver = Cust.Name
+                };
+                Cust.Account += exportReciept.Remaining;
+                _context.Entry(Cust).State = EntityState.Modified;
+                _context.Transactions.Add(tr);
+            }
+            else 
+            {
+
+                Car car = _context.Cars.Find(exportReciept.CarID);
+                tr = new Transactions()
+                {
+                    ReceiptID = exportReciept.ID,
+                    Amount = exportReciept.Remaining,
+                    Date = exportReciept.Date,
+                    ReceiptType = "Export",
+                    User = exportReciept.UserName,
+                    Type = "فاتوره بيع لعربيه",
+                    Receiver = car.Name
+                };
+                car.Account += exportReciept.Remaining;
+                _context.Entry(car).State = EntityState.Modified;
+                _context.Transactions.Add(tr);
+            }
+
 
             _context.ExportReciepts.Add(exportReciept);
-            _context.Transactions.Add(tr);
             await _context.SaveChangesAsync();
             foreach (var item in exportRecieptDTO.Products)
             {
@@ -104,12 +129,32 @@ namespace API_and_DataBase.Controllers
                 Product product=_context.Products.Find(item.ProductID);
                 product.Quantity -= item.Quantity;
                 _context.Entry(product).State = EntityState.Modified;
+
+                if(exportReciept.CarID != null)
+                {
+                   if(_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID)==null)
+                    {
+                        CarProduct car = new CarProduct()
+                        {
+                            CarID = exportReciept.CarID,
+                            ProductID= item.ProductID,
+                            Quantity = item.Quantity,
+                        };
+                        _context.CarProducts.Add(car);
+                    }
+                   else
+                    {
+                        CarProduct car = _context.CarProducts.FirstOrDefault(w=>w.ProductID==item.ProductID);
+                        car.Quantity += item.Quantity;
+                        _context.Entry(car).State = EntityState.Modified;
+
+
+                    }
+                }
             }
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetExportReciept", new { id = exportReciept.ID }, exportReciept);
+            return CreatedAtAction("GetExportReciept", new { id = exportReciept.ID }, exportReciept.ExportRecieptToDTO());
         }
-
         // DELETE: api/ExportReciept/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteExportReciept(int id)

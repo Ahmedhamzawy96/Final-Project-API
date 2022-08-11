@@ -8,7 +8,7 @@
         public string Date { get; set; }
         public decimal Paid { get; set; }
         public decimal Remaining { get; set; }
-        public int? CustID { get; set; }
+        public int? customerID { get; set; }
         public string UserName { get; set; }
         public int? CarID { get; set; }
         public ExportProductDTO [] Products { get; set; }

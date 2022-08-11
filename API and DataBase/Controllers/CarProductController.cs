@@ -139,7 +139,7 @@ namespace API_and_DataBase.Controllers
             return NoContent();
         }
 
-        private bool CarProductExists(int id , int carID)
+        private bool CarProductExists(int? id , int carID)
 
         {
             return _context.CarProducts.Any(e => e.CarID == id && e.CarID == carID);
