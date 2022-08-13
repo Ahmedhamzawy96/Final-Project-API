@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using API_and_DataBase.Structures;
+using API_and_DataBase.DTO;
+using API_and_DataBase.DTO.Extension_Methods;
 
 namespace API_and_DataBase.Controllers
 {
@@ -22,14 +25,14 @@ namespace API_and_DataBase.Controllers
 
         // GET: api/Transactions
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transactions>>> GetTransactions()
+        public async Task<ActionResult<IEnumerable<TransactionsDTO>>> GetTransactions()
         {
-            return await _context.Transactions.ToListAsync();
+            return await _context.Transactions.Select(A => A.TransactionsToDTO()).ToListAsync();
         }
 
         // GET: api/Transactions/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transactions>> GetTransactions(int id)
+        public async Task<ActionResult<TransactionsDTO>> GetTransactions(int id)
         {
             var transactions = await _context.Transactions.FindAsync(id);
 
@@ -38,14 +41,27 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
 
-            return transactions;
+            return transactions.TransactionsToDTO();
+        }
+        [HttpGet("{id}/{type}")]
+        public async Task<ActionResult<TransactionsDTO>> GetTransactions(int id , int type)
+        {
+            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id).ToListAsync();
+
+            if (transactions == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(transactions.Select(A => A.TransactionsToDTO()));
         }
 
         // PUT: api/Transactions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransactions(int id, Transactions transactions)
+        public async Task<IActionResult> PutTransactions(int id, TransactionsDTO transactionsDTO)
         {
+            Transactions transactions = transactionsDTO.DTOTOTransactions();
             if (id != transactions.ID)
             {
                 return BadRequest();
@@ -73,10 +89,11 @@ namespace API_and_DataBase.Controllers
         }
 
         // POST: api/Transactions
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Transactions>> PostTransactions(Transactions transactions)
+        public async Task<ActionResult<Transactions>> PostTransactions(TransactionsDTO transactionsDTO)
         {
+            Transactions transactions = transactionsDTO.DTOTOTransactions();
+
             _context.Transactions.Add(transactions);
             await _context.SaveChangesAsync();
 

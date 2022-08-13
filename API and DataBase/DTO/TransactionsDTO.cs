@@ -1,11 +1,7 @@
-﻿using API_and_DataBase.Structures;
-using System.ComponentModel.DataAnnotations;
-
-namespace API_and_DataBase.Models
+﻿namespace API_and_DataBase.DTO
 {
-    public class Transactions
+    public class TransactionsDTO
     {
-        [Key]
         public int ID { get; set; }
         public int? AccountID { get; set; }
         public int AccountType { get; set; }
@@ -13,13 +9,8 @@ namespace API_and_DataBase.Models
         public int Type { get; set; }
         public int? OperationID { get; set; }
         public int Operation { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string UserName { get; set; }
         public string Notes { get; set; }
-
-        internal object tranactionDTO()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

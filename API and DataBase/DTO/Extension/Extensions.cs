@@ -375,6 +375,62 @@ namespace API_and_DataBase.DTO.Extension_Methods
         }
         #endregion
 
+        #region Transactions
+        //transactionsTODTO
+        public static TransactionsDTO TransactionsToDTO(this Transactions transactions)
+        {
+
+            if (transactions != null)
+            {
+                return new TransactionsDTO
+                {
+                    ID = transactions.ID,
+                    AccountID = transactions.AccountID,
+                    AccountType = transactions.AccountType,
+                    Amount = transactions.Amount,
+                    Type = transactions.Type,   
+                    OperationID = transactions.OperationID, 
+                    Operation = transactions.Operation, 
+                    Date = transactions.Date.ToString(),
+                    UserName = transactions.UserName,   
+                    Notes = transactions.Notes, 
+
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        //DTO to Transactions 
+        public static Transactions DTOTOTransactions(this TransactionsDTO transactionsDTO)
+        {
+
+            if (transactionsDTO != null)
+            {
+                return new Transactions
+                {
+                    ID = transactionsDTO.ID,
+                    AccountID = transactionsDTO.AccountID,
+                    AccountType = transactionsDTO.AccountType,
+                    Amount = transactionsDTO.Amount,
+                    Type = transactionsDTO.Type,
+                    OperationID = transactionsDTO.OperationID,
+                    Operation = transactionsDTO.Operation,
+                    Date = Convert.ToDateTime(transactionsDTO.Date),
+                    UserName = transactionsDTO.UserName,
+                    Notes = transactionsDTO.Notes,
+
+                };
+            }
+            else
+            {
+                return null;
+            }
+        }
+        #endregion
+
         #region Product
         //ProductToDto 
         public static ProductDTO ProductToDTO(this Product product)

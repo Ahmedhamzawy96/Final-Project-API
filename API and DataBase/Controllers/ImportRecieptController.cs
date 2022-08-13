@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
 using API_and_DataBase.DTO.Extension_Methods;
 using API_and_DataBase.DTO;
+using API_and_DataBase.Structures;
 
 namespace API_and_DataBase.Controllers
 {
@@ -47,7 +48,6 @@ namespace API_and_DataBase.Controllers
         }
 
         // PUT: api/ImportReciept/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutImportReciept(int id, ImportRecieptDTO importRecieptDTO)
         {
@@ -80,20 +80,21 @@ namespace API_and_DataBase.Controllers
         }
 
         // POST: api/ImportReciept
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ImportReciept>> PostImportReciept(ImportRecieptDTO importRecieptDTO)
         {
             ImportReciept importReciept = importRecieptDTO.DTOToImportReciept();
             Transactions tr = new Transactions()
             {
-                ReceiptID = importReciept.ID,
+                AccountID = importReciept.SupplierID,
+                AccountType = (int)AccountType.Supplier,
                 Amount = importReciept.Remaining,
+                Type = (int)TransType.Paid,
                 Date = importReciept.Date,
-                ReceiptType = "Import",
-                User = importReciept.UserName,
-                Type = "فاتوره شراء",
-                Receiver = _context.Customers.Where(w => w.ID == importReciept.SupplierID).Select(w => w.Name).FirstOrDefault()
+                OperationID = importReciept.ID,
+                Operation = (int)Operation.ImportReciept,
+                UserName = importReciept.UserName,
+
             };
             Supplier sup = _context.Suppliers.Find(importReciept.SupplierID);
             sup.Account += importReciept.Remaining;
@@ -108,7 +109,7 @@ namespace API_and_DataBase.Controllers
                 _context.ImportProducts.Add(item.DTOToImportProduct());
 
                 Product product = _context.Products.Find(item.ProductID);
-                product.Quantity -= item.Quantity;
+                product.Quantity += item.Quantity;
                 _context.Entry(product).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();

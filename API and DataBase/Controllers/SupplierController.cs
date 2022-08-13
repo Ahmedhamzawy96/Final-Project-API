@@ -72,7 +72,7 @@ namespace API_and_DataBase.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetSupplier", new { id = supplier.ID }, supplier);
         }
 
         // POST: api/Supplier

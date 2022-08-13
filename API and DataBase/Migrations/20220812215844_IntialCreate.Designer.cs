@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_and_DataBase.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20220810151647_intial")]
-    partial class intial
+    [Migration("20220812215844_IntialCreate")]
+    partial class IntialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,7 +48,7 @@ namespace API_and_DataBase.Migrations
 
             modelBuilder.Entity("API_and_DataBase.Models.CarProduct", b =>
                 {
-                    b.Property<int>("CarID")
+                    b.Property<int?>("CarID")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductID")
@@ -297,25 +297,31 @@ namespace API_and_DataBase.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"), 1L, 1);
 
+                    b.Property<int?>("AccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountType")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ReceiptID")
+                    b.Property<string>("Notes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Operation")
                         .HasColumnType("int");
 
-                    b.Property<string>("ReceiptType")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OperationID")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Receiver")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("User")
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
