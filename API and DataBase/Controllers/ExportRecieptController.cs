@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
 using API_and_DataBase.DTO;
 using API_and_DataBase.DTO.Extension_Methods;
+using API_and_DataBase.Structures;
 
 namespace API_and_DataBase.Controllers
 {
@@ -74,7 +75,6 @@ namespace API_and_DataBase.Controllers
             return NoContent();
         }
         // POST: api/ExportReciept
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ExportReciept>> PostExportReciept(ExportRecieptDTO exportRecieptDTO)
         {
@@ -86,13 +86,14 @@ namespace API_and_DataBase.Controllers
                 Customer Cust = _context.Customers.Find(exportReciept.CustomerID);
                 tr = new Transactions()
                 {
-                    ReceiptID = exportReciept.ID,
+                    AccountID = exportReciept.CustomerID,
+                    AccountType = (int)AccountType.Customer,
                     Amount = exportReciept.Remaining,
+                    Type = (int)TransType.Get,
                     Date = exportReciept.Date,
-                    ReceiptType = "Export",
-                    User = exportReciept.UserName,
-                    Type = " فاتوره بيع لاشخاص",
-                    Receiver = Cust.Name
+                    OperationID = exportReciept.ID,
+                    Operation = (int)Operation.ExportReciept,
+                    UserName = exportReciept.UserName,
                 };
                 Cust.Account += exportReciept.Remaining;
                 _context.Entry(Cust).State = EntityState.Modified;
@@ -104,13 +105,14 @@ namespace API_and_DataBase.Controllers
                 Car car = _context.Cars.Find(exportReciept.CarID);
                 tr = new Transactions()
                 {
-                    ReceiptID = exportReciept.ID,
+                    AccountID = exportReciept.CarID,
+                    AccountType = (int)AccountType.Car,
                     Amount = exportReciept.Remaining,
+                    Type = (int)TransType.Get,
                     Date = exportReciept.Date,
-                    ReceiptType = "Export",
-                    User = exportReciept.UserName,
-                    Type = "فاتوره بيع لعربيه",
-                    Receiver = car.Name
+                    OperationID = exportReciept.ID,
+                    Operation = (int)Operation.ExportReciept,
+                    UserName = exportReciept.UserName,
                 };
                 car.Account += exportReciept.Remaining;
                 _context.Entry(car).State = EntityState.Modified;
