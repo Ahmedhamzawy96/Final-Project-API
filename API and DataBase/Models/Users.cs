@@ -8,10 +8,10 @@ namespace API_and_DataBase.Models
         [Key]
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string Type { get; set; }
+        public int Type { get; set; }
 
         [ForeignKey("Car")]
-        public int CarID { get; set; }
+        public int? CarID { get; set; }
         public virtual Car Car { get; set; }
         public virtual ICollection<ImportReciept> ImportReciepts { get; set; } = new HashSet<ImportReciept>();
         public virtual ICollection<ExportReciept> ExportReciepts { get; set; } = new HashSet<ExportReciept>();

@@ -95,7 +95,7 @@ namespace API_and_DataBase.Migrations
                     AccountType = table.Column<int>(type: "int", nullable: false),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    OperationID = table.Column<int>(type: "int", nullable: false),
+                    OperationID = table.Column<int>(type: "int", nullable: true),
                     Operation = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -112,8 +112,8 @@ namespace API_and_DataBase.Migrations
                 {
                     UserName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Type = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CarID = table.Column<int>(type: "int", nullable: false)
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    CarID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -122,8 +122,7 @@ namespace API_and_DataBase.Migrations
                         name: "FK_Users_Cars_CarID",
                         column: x => x.CarID,
                         principalTable: "Cars",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
