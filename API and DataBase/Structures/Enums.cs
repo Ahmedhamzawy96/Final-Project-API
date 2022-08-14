@@ -24,4 +24,11 @@
             CustomerTrans = 5,
 
         }
+
+    public enum userType
+    {
+        Admin = 0,
+        Employee = 1,
+        Car = 2,
     }
+}

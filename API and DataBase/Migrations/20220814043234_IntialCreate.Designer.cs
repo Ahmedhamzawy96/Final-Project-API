@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_and_DataBase.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    [Migration("20220812215844_IntialCreate")]
+    [Migration("20220814043234_IntialCreate")]
     partial class IntialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -315,7 +315,7 @@ namespace API_and_DataBase.Migrations
                     b.Property<int>("Operation")
                         .HasColumnType("int");
 
-                    b.Property<int>("OperationID")
+                    b.Property<int?>("OperationID")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -334,14 +334,14 @@ namespace API_and_DataBase.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("CarID")
+                    b.Property<int?>("CarID")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("UserName");
 
@@ -445,9 +445,7 @@ namespace API_and_DataBase.Migrations
                 {
                     b.HasOne("API_and_DataBase.Models.Car", "Car")
                         .WithMany("Users")
-                        .HasForeignKey("CarID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CarID");
 
                     b.Navigation("Car");
                 });

@@ -17,9 +17,5 @@ namespace API_and_DataBase.Models
         public string UserName { get; set; }
         public string Notes { get; set; }
 
-        internal object tranactionDTO()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
