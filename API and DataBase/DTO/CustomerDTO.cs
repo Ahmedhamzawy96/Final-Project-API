@@ -7,5 +7,7 @@
         public string Phone { get; set; }
         public decimal Account { get; set; }
         public string Notes { get; set; }
+        public bool ISDeleted { get; set; }
+
     }
 }

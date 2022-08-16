@@ -12,5 +12,7 @@
         public string Date { get; set; }
         public string UserName { get; set; }
         public string Notes { get; set; }
+        public bool ISDeleted { get; set; }
+
     }
 }

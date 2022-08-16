@@ -6,6 +6,8 @@
         public string Password { get; set; }
         public int Type { get; set; }
         public int? CarID { get; set; }
+        public bool ISDeleted { get; set; }
+
 
     }
 }

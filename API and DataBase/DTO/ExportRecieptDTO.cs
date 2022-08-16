@@ -11,6 +11,8 @@
         public int? customerID { get; set; }
         public string UserName { get; set; }
         public int? CarID { get; set; }
+        public bool ISDeleted { get; set; }
+
         public ExportProductDTO [] Products { get; set; }
 
     }

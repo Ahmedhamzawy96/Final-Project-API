@@ -10,6 +10,8 @@ namespace API_and_DataBase.Models
         public string Phone { get; set; }
         public decimal Account { get; set; }
         public string Notes { get; set; }
+        public bool ISDeleted { get; set; }
+
         public virtual ICollection<ImportReciept> ImportReciepts { get; set; } = new HashSet<ImportReciept>();
 
     }

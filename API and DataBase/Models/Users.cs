@@ -9,6 +9,8 @@ namespace API_and_DataBase.Models
         public string UserName { get; set; }
         public string Password { get; set; }
         public int Type { get; set; }
+        public bool ISDeleted { get; set; }
+
 
         [ForeignKey("Car")]
         public int? CarID { get; set; }

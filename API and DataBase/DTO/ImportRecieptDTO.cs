@@ -12,6 +12,8 @@
         public int? SUPID { get; set; }
 
         public string UserName { get; set; }
+        public bool ISDeleted { get; set; }
+
         public ImportProductDTO[] importProducts { get; set; }
     }
 }
