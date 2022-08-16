@@ -11,19 +11,18 @@ namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LoginController : ControllerBase
+    public class loginController : ControllerBase
     {
-        private readonly CompanyContext _context;
-
-        public LoginController(CompanyContext context)
+        CompanyContext db;
+        public loginController(CompanyContext db)
         {
-            _context = context;
+            this.db = db;
         }
         [HttpPost]
-        public async Task<IActionResult> Login( Login userLogin ) 
+        public async Task<IActionResult> Login(Login userLogin)
         {
 
-            Users user = _context.Users.Where(n => n.UserName == userLogin.userName && n.Password == userLogin.password).FirstOrDefault();
+            Users user = db.Users.Where(n => n.UserName == userLogin.userName && n.Password == userLogin.password).FirstOrDefault();
             if (user != null)
             {
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my_sercret_key_123456"));
@@ -39,12 +38,12 @@ namespace API_and_DataBase.Controllers
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
 
-                return Ok(new 
+                return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     userName = user.UserName,
                     type = user.Type,
-                }) ;
+                });
             }
             else
             {
@@ -52,7 +51,6 @@ namespace API_and_DataBase.Controllers
             }
 
         }
-
-
     }
 }
+

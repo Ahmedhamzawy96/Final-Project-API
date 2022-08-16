@@ -32,7 +32,23 @@ namespace API_and_DataBase.Controllers
 
             return await _context.Cars.Select(w=>w.CarToDTO()).ToListAsync();
         }
+        [HttpGet ]
+        [Route("available")]
+        public async Task<ActionResult<IEnumerable<CarDTO>>> Getavailable()
+        {
+            var users = _context.Users.ToList();
+            var cars = _context.Cars.ToList();
+            var available = new List<Car>();
+            foreach (var item in cars)
+            {
+                if (!users.Contains(users.FirstOrDefault(w => w.CarID == item.ID)))
+                {
+                    available.Add(item);
+                }
 
+            }
+            return Ok( available.Select(w => w.CarToDTO()));
+        }
         // GET: api/Car/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CarDTO>> GetCar(int id)

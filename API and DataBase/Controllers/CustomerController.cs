@@ -72,7 +72,7 @@ namespace API_and_DataBase.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetCustomer", new { id = customer.ID }, customer);
         }
 
         // POST: api/Customer
