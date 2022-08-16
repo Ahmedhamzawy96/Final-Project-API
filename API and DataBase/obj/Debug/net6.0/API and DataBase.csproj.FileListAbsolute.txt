@@ -852,3 +852,5 @@ F:\Final-Project-API\API and DataBase\obj\Debug\net6.0\API and DataBase.genrunti
 F:\Final-Project-API\API and DataBase\obj\Debug\net6.0\ref\API and DataBase.dll
 C:\Users\HAMZAWY\Desktop\Final Project\API\Repo\Final-Project-API\API and DataBase\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\HAMZAWY\Desktop\Final Project\API\Repo\Final-Project-API\API and DataBase\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+F:\Final-Project-API\API and DataBase\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\Final-Project-API\API and DataBase\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
