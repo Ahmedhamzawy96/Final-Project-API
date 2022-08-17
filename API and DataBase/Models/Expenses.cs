@@ -7,7 +7,7 @@ namespace API_and_DataBase.Models
         [Key]
         public int ID { get; set; }
         public string Name { get; set; }
-        public bool ISDeleted { get; set; }
+        public bool ISDeleted { get; set; } = false;
 
     }
 }

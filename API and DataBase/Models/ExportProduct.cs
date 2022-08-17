@@ -8,7 +8,7 @@ namespace API_and_DataBase.Models
         public decimal TotalPrice { get; set; }
         public decimal Price { get; set; }
 
-        public bool ISDeleted { get; set; }
+        public bool ISDeleted { get; set; } = false;
 
         public virtual ExportReciept ExportReciept { get; set; }
         public virtual Product Product { get; set; }

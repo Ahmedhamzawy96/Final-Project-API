@@ -9,7 +9,6 @@
         public int Quantity { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal BuyingPrice { get; set; }
-        public bool ISDeleted { get; set; }
 
 
     }

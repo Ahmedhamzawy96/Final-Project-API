@@ -26,7 +26,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ExportProductDTO>>> GetExportProducts()
         {
-            return await _context.ExportProducts.Select(w=>w.ExportProductToDTO()).ToListAsync();
+            return await _context.ExportProducts.Where(w=>w.ISDeleted==false).Select(w=>w.ExportProductToDTO()).ToListAsync();
         }
 
         // GET: api/ExportProduct/5
@@ -36,7 +36,7 @@ namespace API_and_DataBase.Controllers
             var exportProduct = await _context.ExportProducts.FindAsync(id);
 
 
-            if (exportProduct == null)
+            if (exportProduct == null||exportProduct.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -51,7 +51,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutExportProduct(int id, int ReceiptID, ExportProductDTO exportProductDTO)
         {
             ExportProduct exportProduct = exportProductDTO.DTOToExportProduct();
-            if (id != exportProduct.ProductID && ReceiptID!=exportProduct.ReceiptID)
+            if (id != exportProduct.ProductID && ReceiptID!=exportProduct.ReceiptID|| exportProduct.ISDeleted == true)
             {
                 return BadRequest();
             }
@@ -116,13 +116,29 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteExportProduct(int id, int ReceiptID)
         {
             var exportProduct = await _context.ExportProducts.FirstOrDefaultAsync(w => w.ProductID == id && w.ReceiptID == ReceiptID);
-            if (exportProduct == null)
+            if (id != exportProduct.ProductID && ReceiptID != exportProduct.ReceiptID)
             {
-                return NotFound();
+                return BadRequest();
             }
+            exportProduct.ISDeleted = true;
+            _context.Entry(exportProduct).State = EntityState.Modified;
 
-            _context.ExportProducts.Remove(exportProduct);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+
+                if (!ExportProductExists(id, ReceiptID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -130,7 +146,7 @@ namespace API_and_DataBase.Controllers
 
         private bool ExportProductExists(int id, int ReceiptID)
         {
-            return _context.ExportProducts.Any(e => e.ReceiptID == ReceiptID && e.ProductID==id);
+            return _context.ExportProducts.Any(e => e.ReceiptID == ReceiptID && e.ProductID==id&& e.ISDeleted == false);
         }
     }
 }

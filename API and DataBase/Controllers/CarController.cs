@@ -30,14 +30,14 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<IEnumerable<CarDTO>>> GetCars()
         {
 
-            return await _context.Cars.Select(w=>w.CarToDTO()).ToListAsync();
+            return await _context.Cars.Where(w=>w.ISDeleted==false).Select(w=>w.CarToDTO()).ToListAsync();
         }
         [HttpGet ]
         [Route("available")]
         public async Task<ActionResult<IEnumerable<CarDTO>>> Getavailable()
         {
-            var users = _context.Users.ToList();
-            var cars = _context.Cars.ToList();
+            var users = _context.Users.ToList().Where(w => w.ISDeleted == false);
+            var cars = _context.Cars.ToList().Where(w=> w.ISDeleted == false);
             var available = new List<Car>();
             foreach (var item in cars)
             {
@@ -45,7 +45,6 @@ namespace API_and_DataBase.Controllers
                 {
                     available.Add(item);
                 }
-
             }
             return Ok( available.Select(w => w.CarToDTO()));
         }
@@ -55,7 +54,7 @@ namespace API_and_DataBase.Controllers
         {
             Car car = await _context.Cars.FindAsync(id);
             
-            if (car == null)
+            if (car == null || car.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -68,7 +67,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutCar(int id, CarDTO carDTO)
         {
             Car car=carDTO.DTOToCar();
-            if (id != car.ID)
+            if (id != car.ID &&car.ISDeleted==true)
             {
                 return BadRequest();
             }
@@ -102,7 +101,6 @@ namespace API_and_DataBase.Controllers
             Car car= carDTO.DTOToCar();
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetCar", new { id = car.ID }, car);
         }
 
@@ -111,20 +109,35 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteCar(int id)
         {
             var car = await _context.Cars.FindAsync(id);
-            if (car == null)
+            if (id != car.ID)
             {
-                return NotFound();
+                return BadRequest();
             }
+            car.ISDeleted = true;
+            _context.Entry(car).State = EntityState.Modified;
 
-            _context.Cars.Remove(car);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CarExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
 
         private bool CarExists(int id)
         {
-            return _context.Cars.Any(e => e.ID == id);
+            return _context.Cars.Any(e => e.ID == id&&e.ISDeleted==false);
         }
     }
 }

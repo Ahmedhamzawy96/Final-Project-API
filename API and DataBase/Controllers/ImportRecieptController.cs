@@ -27,7 +27,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ImportRecieptDTO>>> GetImportReciepts()
         {
-            return await _context.ImportReciepts.Select(A=>A.ImportRecieptToDTO()).ToListAsync();
+            return await _context.ImportReciepts.Where(w=>w.ISDeleted==false).Select(A=>A.ImportRecieptToDTO()).ToListAsync();
 
         }
 
@@ -38,7 +38,7 @@ namespace API_and_DataBase.Controllers
             var imporReciept = await _context.ImportReciepts.FindAsync(id);
             List<ImportProduct> importproducts = _context.ImportProducts.Where(w => w.ReceiptID == id).ToList();
 
-            if (imporReciept == null)
+            if (imporReciept == null|| imporReciept.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -53,7 +53,7 @@ namespace API_and_DataBase.Controllers
         {
             ImportReciept importReciept = importRecieptDTO.DTOToImportReciept();
 
-            if (id != importReciept.ID)
+            if (id != importReciept.ID || importReciept.ISDeleted == true)
             {
                 return BadRequest();
             }
@@ -122,20 +122,35 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteImportReciept(int id)
         {
             var importReciept = await _context.ImportReciepts.FindAsync(id);
-            if (importReciept == null)
+            if (id != importReciept.ID)
             {
-                return NotFound();
+                return BadRequest();
             }
+            importReciept.ISDeleted = true;
+            _context.Entry(importReciept).State = EntityState.Modified;
 
-            _context.ImportReciepts.Remove(importReciept);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ImportRecieptExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
 
             return NoContent();
         }
 
         private bool ImportRecieptExists(int id)
         {
-            return _context.ImportReciepts.Any(e => e.ID == id);
+            return _context.ImportReciepts.Any(e => e.ID == id&&e.ISDeleted==false);
         }
     }
 }

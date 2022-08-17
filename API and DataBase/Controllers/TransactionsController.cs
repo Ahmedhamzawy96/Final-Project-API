@@ -27,7 +27,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TransactionsDTO>>> GetTransactions()
         {
-            return await _context.Transactions.Select(A => A.TransactionsToDTO()).ToListAsync();
+            return await _context.Transactions.Where(w=>w.ISDeleted==false).Select(A => A.TransactionsToDTO()).ToListAsync();
         }
 
         // GET: api/Transactions/5
@@ -36,7 +36,7 @@ namespace API_and_DataBase.Controllers
         {
             var transactions = await _context.Transactions.FindAsync(id);
 
-            if (transactions == null)
+            if (transactions == null||transactions.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -46,9 +46,9 @@ namespace API_and_DataBase.Controllers
         [HttpGet("{id}/{type}")]
         public async Task<ActionResult<TransactionsDTO>> GetTransactions(int id , int type)
         {
-            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id).ToListAsync();
+            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id&&A.ISDeleted==false).ToListAsync();
 
-            if (transactions == null)
+            if (transactions == null )
             {
                 return NotFound();
             }
@@ -62,7 +62,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutTransactions(int id, TransactionsDTO transactionsDTO)
         {
             Transactions transactions = transactionsDTO.DTOTOTransactions();
-            if (id != transactions.ID)
+            if (id != transactions.ID||transactions.ISDeleted==true)
             {
                 return BadRequest();
             }
@@ -105,20 +105,35 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteTransactions(int id)
         {
             var transactions = await _context.Transactions.FindAsync(id);
-            if (transactions == null)
+            if (id != transactions.ID)
             {
-                return NotFound();
+                return BadRequest();
             }
+            transactions.ISDeleted = true;
+            _context.Entry(transactions).State = EntityState.Modified;
 
-            _context.Transactions.Remove(transactions);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!TransactionsExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
 
         private bool TransactionsExists(int id)
         {
-            return _context.Transactions.Any(e => e.ID == id);
+            return _context.Transactions.Any(e => e.ID == id &&e.ISDeleted == false);
         }
     }
 }

@@ -26,7 +26,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SupplierDTO>>> GetSuppliers()
         {
-            return await _context.Suppliers.Select(w=>w.SupplierToDTO()).ToListAsync();
+            return await _context.Suppliers.Where(w=>w.ISDeleted==false).Select(w=>w.SupplierToDTO()).ToListAsync();
         }
 
         // GET: api/Supplier/5
@@ -35,7 +35,7 @@ namespace API_and_DataBase.Controllers
         {
             var supplier = await _context.Suppliers.FindAsync(id);
 
-            if (supplier == null)
+            if (supplier == null||supplier.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -49,7 +49,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutSupplier(int id, SupplierDTO supplierDTO)
         {
             Supplier supplier = supplierDTO.DTOToSupplier();
-            if (id != supplier.ID)
+            if (id != supplier.ID || supplier.ISDeleted == true)
             {
                 return BadRequest();
             }
@@ -92,20 +92,36 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteSupplier(int id)
         {
             var supplier = await _context.Suppliers.FindAsync(id);
-            if (supplier == null)
+            if (id != supplier.ID)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            _context.Suppliers.Remove(supplier);
-            await _context.SaveChangesAsync();
+            supplier.ISDeleted = true;
+            _context.Entry(supplier).State = EntityState.Modified;
 
-            return NoContent();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SupplierExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return CreatedAtAction("GetSupplier", new { id = supplier.ID }, supplier);
         }
 
         private bool SupplierExists(int id)
         {
-            return _context.Suppliers.Any(e => e.ID == id);
+            return _context.Suppliers.Any(e => e.ID == id &&e.ISDeleted == false);
         }
     }
 }

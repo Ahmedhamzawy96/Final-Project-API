@@ -28,7 +28,7 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<IEnumerable<ExportRecieptDTO>>> GetExportReciepts()
         {
 
-            return await _context.ExportReciepts.Select(w=>w.ExportRecieptToDTO()).ToListAsync();
+            return await _context.ExportReciepts.Where(e=>e.ISDeleted==false).Select(w=>w.ExportRecieptToDTO()).ToListAsync();
         }
 
         // GET: api/ExportReciept/5
@@ -38,7 +38,7 @@ namespace API_and_DataBase.Controllers
             var exportReciept = await _context.ExportReciepts.FindAsync(id);
            List<ExportProduct> exportproducts =  _context.ExportProducts.Where(w=>w.ReceiptID==id).ToList();
             
-            if (exportReciept == null)
+            if (exportReciept == null||exportReciept.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -52,7 +52,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutExportReciept(int id, ExportRecieptDTO exportRecieptDTO)
         {
             ExportReciept exportReciept = exportRecieptDTO.DTOToExportReciept();
-            if (id != exportReciept.ID)
+            if (id != exportReciept.ID||exportReciept.ISDeleted==true)
             {
                 return BadRequest();
             }
@@ -84,6 +84,7 @@ namespace API_and_DataBase.Controllers
             ExportReciept exportReciept = exportRecieptDTO.DTOToExportReciept();
             _context.ExportReciepts.Add(exportReciept);
             await _context.SaveChangesAsync();
+
             Transactions tr = new Transactions();
             Users user = _context.Users.Find(exportReciept.UserName);
 
@@ -196,9 +197,6 @@ namespace API_and_DataBase.Controllers
             }
             #endregion
 
-
-
-
            
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetExportReciept", new { id = exportReciept.ID }, exportReciept.ExportRecieptToDTO());
@@ -208,20 +206,33 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteExportReciept(int id)
         {
             var exportReciept = await _context.ExportReciepts.FindAsync(id);
-            if (exportReciept == null)
+            if (id != exportReciept.ID||exportReciept.ISDeleted==true)
             {
-                return NotFound();
+                return BadRequest();
             }
-
-            _context.ExportReciepts.Remove(exportReciept);
-            await _context.SaveChangesAsync();
-
+            exportReciept.ISDeleted = true;
+            _context.Entry(exportReciept).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ExportRecieptExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
             return NoContent();
         }
 
         private bool ExportRecieptExists(int id)
         {
-            return _context.ExportReciepts.Any(e => e.ID == id);
+            return _context.ExportReciepts.Any(e => e.ID == id&&e.ISDeleted==false);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> Login(Login userLogin)
         {
 
-            Users user = db.Users.Where(n => n.UserName == userLogin.userName && n.Password == userLogin.password).FirstOrDefault();
+            Users user = db.Users.Where(n => n.UserName == userLogin.userName && n.Password == userLogin.password&&n.ISDeleted==false).FirstOrDefault();
             if (user != null)
             {
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my_sercret_key_123456"));
