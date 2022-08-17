@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_and_DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class ExpensesController : ControllerBase
     {
         private readonly CompanyContext _context;
