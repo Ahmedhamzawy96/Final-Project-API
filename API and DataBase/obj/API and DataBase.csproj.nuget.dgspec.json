@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Final github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
+    "C:\\Users\\HAMZAWY\\Desktop\\Final Project\\API\\Repo\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
   },
   "projects": {
-    "F:\\Final github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
+    "C:\\Users\\HAMZAWY\\Desktop\\Final Project\\API\\Repo\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Final github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectUniqueName": "C:\\Users\\HAMZAWY\\Desktop\\Final Project\\API\\Repo\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "projectName": "API and DataBase",
-        "projectPath": "F:\\Final github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
-        "packagesPath": "C:\\Users\\Maher\\.nuget\\packages\\",
-        "outputPath": "F:\\Final github\\Final-Project-API\\API and DataBase\\obj\\",
+        "projectPath": "C:\\Users\\HAMZAWY\\Desktop\\Final Project\\API\\Repo\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "packagesPath": "C:\\Users\\HAMZAWY\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HAMZAWY\\Desktop\\Final Project\\API\\Repo\\Final-Project-API\\API and DataBase\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Maher\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\HAMZAWY\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -92,8 +91,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -105,7 +103,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.303\\RuntimeIdentifierGraph.json"
         }
       }
     }
