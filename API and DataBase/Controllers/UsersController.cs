@@ -26,7 +26,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UsersDTO>>> GetUsers()
         {
-            return await _context.Users.Select(w=>w.UsersToDTO()).ToListAsync();
+            return await _context.Users.Where(w=>w.ISDeleted==false).Select(w=>w.UsersToDTO()).ToListAsync();
         }
 
         // GET: api/Users/5
@@ -35,7 +35,7 @@ namespace API_and_DataBase.Controllers
         {
             var users = await _context.Users.FindAsync(id);
 
-            if (users == null)
+            if (users == null || users.ISDeleted == true)
             {
                 return NotFound();
             }
@@ -49,7 +49,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutUsers(string id, UsersDTO usersDTO)
         {
             Users users = usersDTO.DTOToUsers();
-            if (id != users.UserName)
+            if (id != users.UserName||users.ISDeleted==true)
             {
                 return BadRequest();
             }
@@ -107,20 +107,36 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteUsers(string id)
         {
             var users = await _context.Users.FindAsync(id);
-            if (users == null)
+            if (id != users.UserName)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            _context.Users.Remove(users);
-            await _context.SaveChangesAsync();
+            users.ISDeleted=true;
+            _context.Entry(users).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UsersExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
 
         private bool UsersExists(string id)
         {
-            return _context.Users.Any(e => e.UserName == id);
+            return _context.Users.Any(e => e.UserName == id&&e.ISDeleted==false);
         }
     }
 }

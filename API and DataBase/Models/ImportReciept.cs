@@ -12,7 +12,7 @@ namespace API_and_DataBase.Models
         public DateTime Date { get; set; }
         public decimal Paid { get; set; }
         public decimal Remaining { get; set; }
-        public bool ISDeleted { get; set; }
+        public bool ISDeleted { get; set; } = false;
 
 
         public virtual Supplier Supplier { get; set; }

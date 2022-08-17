@@ -8,7 +8,6 @@
         public decimal BuyingPrice { get; set; }
         public decimal SellingPrice { get; set; }
         public int Quantity { get; set; }
-        public bool ISDeleted { get; set; }
 
     }
 }

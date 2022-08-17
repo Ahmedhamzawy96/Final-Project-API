@@ -10,7 +10,7 @@ namespace API_and_DataBase.Models
         public string Name { get; set; }
         public decimal BuyingPrice { get; set; }
         public decimal SellingPrice { get; set; }
-        public bool ISDeleted { get; set; }
+        public bool ISDeleted { get; set; } = false;
 
         public int Quantity { get; set; }
 

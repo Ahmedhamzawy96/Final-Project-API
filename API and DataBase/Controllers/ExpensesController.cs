@@ -24,7 +24,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Expenses>>> GetExpenses()
         {
-            return await _context.Expenses.ToListAsync();
+            return await _context.Expenses.Where(w=>w.ISDeleted==false).ToListAsync();
         }
 
         // GET: api/Expenses/5
@@ -33,7 +33,7 @@ namespace API_and_DataBase.Controllers
         {
             var expenses = await _context.Expenses.FindAsync(id);
 
-            if (expenses == null)
+            if (expenses == null||expenses.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -46,7 +46,7 @@ namespace API_and_DataBase.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutExpenses(int id, Expenses expenses)
         {
-            if (id != expenses.ID)
+            if (id != expenses.ID || expenses.ISDeleted == true)
             {
                 return BadRequest();
             }
@@ -88,20 +88,35 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteExpenses(int id)
         {
             var expenses = await _context.Expenses.FindAsync(id);
-            if (expenses == null)
+            if (id != expenses.ID)
             {
-                return NotFound();
+                return BadRequest();
             }
+            expenses.ISDeleted = true;
+            _context.Entry(expenses).State = EntityState.Modified;
 
-            _context.Expenses.Remove(expenses);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ExpensesExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
 
         private bool ExpensesExists(int id)
         {
-            return _context.Expenses.Any(e => e.ID == id);
+            return _context.Expenses.Any(e => e.ID == id&&e.ISDeleted == true);
         }
     }
 }

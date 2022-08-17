@@ -26,7 +26,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            return await _context.Products.Select(A=> A.ProductToDTO()).ToListAsync();
+            return await _context.Products.Where(w=>w.ISDeleted==false).Select(A=> A.ProductToDTO()).ToListAsync();
 
         }
 
@@ -36,7 +36,7 @@ namespace API_and_DataBase.Controllers
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null)
+            if (product == null||product.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -50,7 +50,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutProduct(int id, ProductDTO productDTO)
         {
             Product product = productDTO.DTOToProduct();
-            if (id != product.ID)
+            if (id != product.ID || product.ISDeleted == true)
             {
                 return BadRequest();
             }
@@ -93,20 +93,35 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
+            if (id != product.ID)
             {
-                return NotFound();
+                return BadRequest();
             }
+            product.ISDeleted = true;
+            _context.Entry(product).State = EntityState.Modified;
 
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
 
             return NoContent();
         }
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.ID == id);
+            return _context.Products.Any(e => e.ID == id&&e.ISDeleted==false);
         }
     }
 }

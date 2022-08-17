@@ -26,7 +26,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
-            return await _context.Customers.Select(w=>w.CustomerToDTO()).ToListAsync();
+            return await _context.Customers.Where(A=> A.ISDeleted == false).Select(w=>w.CustomerToDTO()).ToListAsync();
         }
 
         // GET: api/Customer/5
@@ -35,7 +35,7 @@ namespace API_and_DataBase.Controllers
         {
             var customer = await _context.Customers.FindAsync(id);
 
-            if (customer == null)
+            if (customer == null ||customer.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -49,7 +49,7 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PutCustomer(int id, CustomerDTO customerDTO)
         {
             Customer customer = customerDTO.DTOToCustomer();
-            if (id != customer.ID)
+            if (id != customer.ID || customer.ISDeleted == true)
             {
                 return BadRequest();
             }
@@ -72,7 +72,7 @@ namespace API_and_DataBase.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetCustomer", new { id = customer.ID }, customer);
         }
 
         // POST: api/Customer
@@ -92,20 +92,35 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            if (id != customer.ID)
             {
-                return NotFound();
+                return BadRequest();
+            }
+            customer.ISDeleted = true;
+            _context.Entry(customer).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CustomerExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
 
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return CreatedAtAction("GetCustomer", new { id = customer.ID }, customer);
         }
 
         private bool CustomerExists(int id)
         {
-            return _context.Customers.Any(e => e.ID == id);
+            return _context.Customers.Any(e => e.ID == id&&e.ISDeleted==false);
         }
     }
 }

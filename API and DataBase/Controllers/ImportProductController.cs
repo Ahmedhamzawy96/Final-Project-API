@@ -27,7 +27,7 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<IEnumerable<ImportProductDTO>>> GetImportProducts()
         {
 
-            return await _context.ImportProducts.Select(A=> A.ImportProductToDTO()).ToListAsync();
+            return await _context.ImportProducts.Where(w=>w.ISDeleted==false).Select(A=> A.ImportProductToDTO()).ToListAsync();
         }
 
 
@@ -37,7 +37,7 @@ namespace API_and_DataBase.Controllers
         {
             var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(w=>w.ProductID==id&&w.ReceiptID==ReceiptID);
 
-            if (importProduct == null)
+            if (importProduct == null||importProduct.ISDeleted==true)
             {
                 return NotFound();
             }
@@ -53,7 +53,7 @@ namespace API_and_DataBase.Controllers
         {
             ImportProduct importProduct = importProductDTO.DTOToImportProduct();
 
-            if (id != importProduct.ProductID &&ReceiptID!=importProduct.ReceiptID)
+            if (id != importProduct.ProductID &&ReceiptID!=importProduct.ReceiptID||importProduct.ISDeleted==true)
             {
                 return BadRequest();
             }
@@ -119,13 +119,30 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> DeleteImportProduct(int id ,int ReceiptID)
         {
             var importProduct = await _context.ImportProducts.FirstOrDefaultAsync(w => w.ProductID == id && w.ReceiptID == ReceiptID);
-            if (importProduct == null)
-            {
-                return NotFound();
-            }
 
-            _context.ImportProducts.Remove(importProduct);
-            await _context.SaveChangesAsync();
+            if (id != importProduct.ProductID && ReceiptID != importProduct.ReceiptID)
+            {
+                return BadRequest();
+            }
+            importProduct.ISDeleted = true;
+            _context.Entry(importProduct).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+
+                if (!ImportProductExists(id, ReceiptID))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
             return NoContent();
         }
@@ -133,7 +150,7 @@ namespace API_and_DataBase.Controllers
 
         private bool ImportProductExists(int id, int ReceiptID)
         {
-            return _context.ImportProducts.Any(e => e.ProductID == id&&e.ReceiptID==ReceiptID);
+            return _context.ImportProducts.Any(e => e.ProductID == id&&e.ReceiptID==ReceiptID&&e.ISDeleted==false);
         }
     }
 }
