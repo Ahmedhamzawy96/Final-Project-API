@@ -9,11 +9,14 @@ using API_and_DataBase.Models;
 using API_and_DataBase.Structures;
 using API_and_DataBase.DTO;
 using API_and_DataBase.DTO.Extension_Methods;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class TransactionsController : ControllerBase
     {
         private readonly CompanyContext _context;

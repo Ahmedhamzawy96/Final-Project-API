@@ -1,5 +1,6 @@
 ﻿using API_and_DataBase.DTO;
 using API_and_DataBase.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -11,6 +12,7 @@ namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class LoginController : ControllerBase
     {
         private readonly CompanyContext _context;
