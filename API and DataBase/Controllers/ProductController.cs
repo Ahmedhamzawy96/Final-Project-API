@@ -50,11 +50,7 @@ namespace API_and_DataBase.Controllers
             }
             return Ok(ProductsInCar);
         }
-
-
-
-
-
+ 
         // GET: api/Product/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
