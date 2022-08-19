@@ -49,7 +49,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet("{id}/{type}")]
         public async Task<ActionResult<TransactionsDTO>> GetTransactions(int id , int type)
         {
-            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id&&A.ISDeleted==false).ToListAsync();
+            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id).ToListAsync();
 
             if (transactions == null )
             {
