@@ -33,6 +33,28 @@ namespace API_and_DataBase.Controllers
 
         }
 
+        // GET: api/Product inCar
+        [HttpGet("car/{CarID:int}")]
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProductsInCar(int CarID)
+        {
+            var CarProducts = _context.CarProducts.ToList().Where(A => A.ISDeleted == false && A.CarID == CarID);
+            var Prodducts = _context.Products.ToList().Where(A => A.ISDeleted == false);
+            var ProductsInCar = new List<ProductDTO>();
+            foreach(var item in Prodducts)
+            {
+                if(CarProducts.Contains(CarProducts.FirstOrDefault(A=> A.ProductID == item.ID)))
+                {
+                    item.Quantity = CarProducts.Where(A => A.ProductID == item.ID).Select(A => A.Quantity).FirstOrDefault();
+                    ProductsInCar.Add(item.ProductToDTO());    
+                }
+            }
+            return Ok(ProductsInCar);
+        }
+
+
+
+
+
         // GET: api/Product/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
