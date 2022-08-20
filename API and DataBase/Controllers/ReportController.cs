@@ -51,7 +51,8 @@ namespace API_and_DataBase.Controllers
 
 
 
-            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id).ToListAsync();
+            List<Transactions> transactions = await _context.Transactions.Where(A => A.AccountType == type && A.AccountID == id && A.ISDeleted 
+            == false).ToListAsync();
             transactions = transactions.Where(w => w.Date.Ticks >= date.Ticks&&w.Date.Ticks<=Edta.Ticks).ToList();
             foreach (var item in transactions)
             {

@@ -87,11 +87,14 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<ImportReciept>> PostImportReciept(ImportRecieptDTO importRecieptDTO)
         {
             ImportReciept importReciept = importRecieptDTO.DTOToImportReciept();
+            _context.ImportReciepts.Add(importReciept);
+            await _context.SaveChangesAsync();
             Transactions tr = new Transactions()
             {
                 AccountID = importReciept.SupplierID,
                 AccountType = (int)AccountType.Supplier,
-                Amount = importReciept.Remaining,
+                Remaining   = importReciept.Remaining,
+                Paid   = importReciept.Paid,
                 Type = (int)TransType.Paid,
                 Date = importReciept.Date,
                 OperationID = importReciept.ID,
@@ -103,7 +106,6 @@ namespace API_and_DataBase.Controllers
             sup.Account += importReciept.Remaining;
             _context.Entry(sup).State = EntityState.Modified;
             _context.Transactions.Add(tr);
-            _context.ImportReciepts.Add(importReciept);
             await _context.SaveChangesAsync();
             foreach (var item in importRecieptDTO.importProducts)
             {

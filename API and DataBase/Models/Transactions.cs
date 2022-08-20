@@ -9,7 +9,8 @@ namespace API_and_DataBase.Models
         public int ID { get; set; }
         public int? AccountID { get; set; }
         public int AccountType { get; set; }
-        public decimal Amount { get; set; }
+        public decimal? Paid { get; set; }
+        public decimal? Remaining { get; set; }
         public int Type { get; set; }
         public int? OperationID { get; set; }
         public int Operation { get; set; }
