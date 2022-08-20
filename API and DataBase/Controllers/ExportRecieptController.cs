@@ -99,7 +99,8 @@ namespace API_and_DataBase.Controllers
                     {
                         AccountID = exportReciept.CustomerID,
                         AccountType = (int)AccountType.Customer,
-                        Amount = exportReciept.Remaining,
+                        Remaining = exportReciept.Remaining,
+                        Paid = exportReciept.Paid,
                         Type = (int)TransType.Get,
                         Date = exportReciept.Date,
                         OperationID = exportReciept.ID,
@@ -155,7 +156,8 @@ namespace API_and_DataBase.Controllers
                     {
                         AccountID = exportReciept.CarID,
                         AccountType = (int)AccountType.Car,
-                        Amount = exportReciept.Remaining,
+                        Remaining = exportReciept.Remaining,
+                        Paid = exportReciept.Paid,
                         Type = (int)TransType.Get,
                         Date = exportReciept.Date,
                         OperationID = exportReciept.ID,
