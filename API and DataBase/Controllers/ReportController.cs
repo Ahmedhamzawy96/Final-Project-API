@@ -1,6 +1,7 @@
 ﻿using API_and_DataBase.DTO;
 using API_and_DataBase.DTO.Extension_Methods;
 using API_and_DataBase.Models;
+using API_and_DataBase.Structures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -67,5 +68,30 @@ namespace API_and_DataBase.Controllers
             }
             return Ok(transactions.Select(A => A.TransactionsToDTO()));
         }
+        [HttpGet("Total")]
+        public async Task<ActionResult<TransactionsDTO>> TotalTransaction( [FromQuery] string sdate, [FromQuery] string edate)
+
+        {
+            DateTime date = Convert.ToDateTime(sdate);
+            DateTime Edta = Convert.ToDateTime(edate);
+            
+            List<Transactions> transactions = await _context.Transactions.Where(w=> w.ISDeleted== false).ToListAsync();
+            transactions = transactions.Where(w => w.Date.Ticks >= date.Ticks&&w.Date.Ticks<=Edta.Ticks).ToList();
+
+            decimal? Get = transactions.Where(w => w.Type == (int)TransType.Get).Sum(w=>w.Paid);
+            decimal? Paid = transactions.Where(w => w.Type == (int)TransType.Paid).Sum(w => w.Paid);
+            decimal? DifPaid = Get-Paid;
+            decimal? Total = transactions.Sum(w=>w.Paid);
+            return Ok(new
+            {
+                Paid = Paid,
+                Get = Get,
+                Dif = DifPaid,
+                Total = Total,
+            });
+
+        }
+
+
     }
 }
