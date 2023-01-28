@@ -7,6 +7,8 @@
         public int ProductID { get; set; }
         public string ProductName { get; set; }
 
+        public decimal BuyingPrice { get; set; }
+        public decimal SellingPrice { get; set; }
 
     }
 }
