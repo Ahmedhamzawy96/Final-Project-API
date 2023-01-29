@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\ITI\\.NET\\projects\\Final Project\\API\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
+    "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
   },
   "projects": {
-    "D:\\ITI\\.NET\\projects\\Final Project\\API\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
+    "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\ITI\\.NET\\projects\\Final Project\\API\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectUniqueName": "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "projectName": "API and DataBase",
-        "projectPath": "D:\\ITI\\.NET\\projects\\Final Project\\API\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectPath": "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "packagesPath": "C:\\Users\\ahmed\\.nuget\\packages\\",
-        "outputPath": "D:\\ITI\\.NET\\projects\\Final Project\\API\\Final-Project-API\\API and DataBase\\obj\\",
+        "outputPath": "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -100,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

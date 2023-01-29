@@ -13,7 +13,8 @@ string ploicy = " ";
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=.;database=ElMokhtarDB;Trusted_Connection=True"));
+//builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=(localdb)\\MSSQLLocalDB;database=ElMokhtarDB;Trusted_Connection=True"));
+builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=(localdb)\\MSSQLLocalDB;database=ElMokhtarDB;Trusted_Connection=True"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
