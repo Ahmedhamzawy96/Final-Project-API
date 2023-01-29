@@ -1,9 +1,11 @@
 ﻿using API_and_DataBase.DTO;
 using API_and_DataBase.DTO.Extension_Methods;
 using API_and_DataBase.Models;
+using API_and_DataBase.Structures;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.Xml;
 
 namespace API_and_DataBase.Controllers
 {
@@ -66,6 +68,92 @@ namespace API_and_DataBase.Controllers
                 return NotFound();
             }
             return Ok(transactions.Select(A => A.TransactionsToDTO()));
+        }
+
+
+        [HttpGet("Total")]
+        public async Task<ActionResult<TransactionsDTO>> TotalTransaction([FromQuery] string sdate, [FromQuery] string edate)
+        {
+            DateTime date = Convert.ToDateTime(sdate);
+            DateTime Edta = Convert.ToDateTime(edate);
+
+            //List<Transactions> transactions = await _context.Transactions.Where(w => w.Date.Date >= date.Date && w.Date.Date <= Edta.Date && w.ISDeleted == false).ToListAsync();
+            //transactions = transactions.Where(w => w.Operation != (int)Operation.Expense).ToList();
+            //var transactionsss = new List<Transactions>();
+            //foreach (var item in transactions)
+            //{
+            //    if (users.Contains(users.FirstOrDefault(w => w.UserName == item.UserName && w.Type != (int)userType.Car && w.UserName!="محمد")))
+            //    {
+
+            //        transactionsss.Add(item);
+            //    }
+            //}
+
+
+            List<Transactions> transactionsss = (from t in _context.Transactions
+                                                 join u in _context.Users on t.UserName equals u.UserName
+                                                 where u.Type != (int)userType.Car && t.Date.Date >= date.Date && t.Date.Date <= Edta.Date && t.ISDeleted == false
+                                                 && t.Operation != (int)Operation.Expense
+                                                 select t).ToList();
+
+
+            decimal? Get = transactionsss.Where(w => w.Type == (int)TransType.Get ).Sum(w => w.Paid);
+            decimal? Paid = transactionsss.Where(w => w.Type == (int)TransType.Paid).Sum(w => w.Paid);
+            decimal? DifPaid = Get - Paid;
+            decimal? Total = transactionsss.Sum(w => w.Paid);
+            return Ok(new
+            {
+                Paid = Paid,
+                Get = Get,
+                Dif = DifPaid,
+                Total = Total,
+            });
+
+        }
+        [HttpGet("{carid}")]
+        public async Task<ActionResult<TransactionsDTO>> CarTotalTransaction([FromQuery] string sdate, [FromQuery] string edate,int carid)
+        {
+            DateTime date = Convert.ToDateTime(sdate);
+            DateTime Edta = Convert.ToDateTime(edate);
+            List<Transactions> transactionsss = await (from t in _context.Transactions
+                                                       join u in _context.Users on t.UserName equals u.UserName
+                                                       where u.Type == (int)userType.Car && t.Date.Date >= date.Date && t.Date.Date <= Edta.Date && t.ISDeleted == false
+                                                       && u.CarID== carid &&(t.Operation==(int)Operation.ExportReciept || t.Operation == (int)Operation.CustomerTrans)
+                                                       select t).ToListAsync();
+
+            decimal? Sell = transactionsss.Where(w => w.Type == (int)TransType.Get && w.Operation == (int)Operation.ExportReciept).Sum(w => w.Paid+w.Remaining);
+            decimal? Collect = transactionsss.Where(w => w.Type == (int)TransType.Get && w.Operation == (int)Operation.CustomerTrans).Sum(w => w.Paid);
+      
+            return Ok(new
+            {
+                Transactions = transactionsss,
+                Paid = Sell,
+                Get = Collect
+            });
+
+        }
+
+        [HttpGet("StoreTotal")]
+        public async Task<ActionResult<TransactionsDTO>> StoreTotalTransaction([FromQuery] string sdate, [FromQuery] string edate)
+        {
+            DateTime date = Convert.ToDateTime(sdate);
+            DateTime Edta = Convert.ToDateTime(edate);
+            List<Transactions> transactionsss = await (from t in _context.Transactions
+                                                 join u in _context.Users on t.UserName equals u.UserName
+                                                 where u.Type != (int)userType.Car && t.Date.Date >= date.Date && t.Date.Date <= Edta.Date && t.ISDeleted == false
+                                                 && t.Operation != (int)Operation.Expense
+                                                 select t).ToListAsync();
+
+            decimal? Get = transactionsss.Where(w => w.Type == (int)TransType.Get ).Sum(w => w.Paid);
+            decimal? Paid = transactionsss.Where(w => w.Type == (int)TransType.Paid ).Sum(w => w.Paid);
+
+            return Ok(new
+            {
+                transactions= transactionsss,
+                Paid = Paid,
+                Get = Get,
+            });
+
         }
     }
 }
