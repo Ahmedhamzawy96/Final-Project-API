@@ -35,12 +35,13 @@ namespace API_and_DataBase.Controllers
                               on P.ID equals CP.ProductID
                               select new CarProductDTO
                               {
+                                  BuyingPrice= P.BuyingPrice,
+                                  SellingPrice= P.SellingPrice,
                                   CarID = CP.CarID,
                                   ProductID = CP.ProductID,
                                   ProductName = P.Name,
-                                  Quantity = CP.Quantity
+                                  Quantity = CP.Quantity,
                               };
-
 
             return Ok(CarProducts);
         }            
