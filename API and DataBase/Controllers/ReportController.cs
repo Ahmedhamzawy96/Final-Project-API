@@ -155,5 +155,53 @@ namespace API_and_DataBase.Controllers
             });
 
         }
+
+
+        [HttpGet("ProfitMargin")]
+        public async Task<ActionResult<TransactionsDTO>> ProfitMargin([FromQuery] string sdate, [FromQuery] string edate, int? carid)
+        {
+            DateTime date = Convert.ToDateTime(sdate);
+            DateTime Edta = Convert.ToDateTime(edate);
+            var Receipts = await (from er in _context.ExportReciepts join ep in _context.ExportProducts
+                                        on er.ID equals ep.ReceiptID
+                                        join u in _context.Users on er.UserName equals u.UserName
+                                        join P in _context.Products on ep.ProductID equals P.ID
+                                        where er.ISDeleted== false && er.Date.Date >= date.Date && er.Date.Date <= Edta.Date
+                                  group new { P,ep } by new { u.UserName, u.Type, er.ID, er.CustomerID, u.CarID,er.Date}into g
+                                        orderby g.Key.ID
+                                        select new
+                                        {
+                                            User = g.Key.UserName,
+                                            Type = g.Key.Type,
+                                            ID = g.Key.ID,
+                                            CustomerID = g.Key.CustomerID,
+                                            SellingPrice = g.Sum(x => x.ep.Price * x.ep.Quantity),
+                                            BuyingPrice = g.Sum(x => x.P.BuyingPrice * x.ep.Quantity),
+                                            CarID=g.Key.CarID,
+                                            Date=g.Key.Date,
+                                        }
+                                        ).ToListAsync();
+
+
+            if(carid!=null)
+            {
+                Receipts = Receipts.Where(x => x.Type == (int)userType.Car ).ToList();
+            }
+            else
+            {
+                Receipts = Receipts.Where(x => x.Type != (int)userType.Car).ToList();
+            }
+            decimal? Buyingprice = Receipts.Sum(w => w.BuyingPrice);
+            decimal? SellingPrice = Receipts.Sum(w => w.SellingPrice);
+
+            return Ok(new
+            {
+                Receipts = Receipts,
+                Buyingprice = Buyingprice,
+                SellingPrice = SellingPrice,
+            });
+
+        }
+
     }
 }

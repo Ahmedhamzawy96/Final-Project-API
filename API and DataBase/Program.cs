@@ -1,3 +1,4 @@
+using API_and_DataBase.Migrations;
 using API_and_DataBase.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Json;
@@ -13,7 +14,9 @@ string ploicy = " ";
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("server=.;database=ElMokhtarDB;Trusted_Connection=True"));
+//builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("Data Source=SQL8004.site4now.net;Initial Catalog=db_a8b9a3_elmokhtar;User Id=db_a8b9a3_elmokhtar_admin;Password=@A123456"));
+builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("Data Source=.;Initial Catalog=ElMokhtarDB;integrated security=true;persist security info=false"));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -35,11 +38,11 @@ builder.Services.AddCors(options => options.AddPolicy(ploicy, builder =>
     builder.AllowAnyHeader();
 }));
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{}
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+
 
 app.UseRouting();
 app.UseCors(ploicy);

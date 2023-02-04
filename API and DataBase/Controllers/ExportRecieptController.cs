@@ -15,7 +15,7 @@ namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
 
     public class ExportRecieptController : ControllerBase
     {

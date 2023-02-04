@@ -14,7 +14,7 @@ namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+ 
 
     public class ProductController : ControllerBase
     {
@@ -143,6 +143,16 @@ namespace API_and_DataBase.Controllers
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.ID == id&&e.ISDeleted==false);
+        }
+
+        [HttpPut("UpdateProductPrice/{Id}")]
+        public async Task<ActionResult> UpdateProductPrice(int Id, ProductPriceDTO productPriceDTO)
+        {
+            var UpdatedProduct = await _context.Products.FindAsync(Id);
+            UpdatedProduct.BuyingPrice = productPriceDTO.buyingPrice;
+            UpdatedProduct.SellingPrice = productPriceDTO.SellingPrice;
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
