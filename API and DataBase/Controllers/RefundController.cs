@@ -73,7 +73,7 @@ namespace API_and_DataBase.Controllers
             _context.Entry(Cust).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(refundRec.ID);
         }
 
         // import reciept refund
@@ -126,7 +126,7 @@ namespace API_and_DataBase.Controllers
             _context.Entry(supp).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(refundRec.ID);
         }
 
         //reciept from Car Refund
@@ -180,7 +180,7 @@ namespace API_and_DataBase.Controllers
             Cust.Account -= rec.Remaining;
             _context.Entry(Cust).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(refundRec.ID);
         }
 
 
@@ -252,7 +252,7 @@ namespace API_and_DataBase.Controllers
             car.Account -= rec.Remaining;
             _context.Entry(car).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(refundRec.ID);
         }
 
         [HttpGet("ReceiptsFilter/{id}")]

@@ -55,7 +55,8 @@ namespace API_and_DataBase.Controllers
             };
 
             byte[] pdfBytes = pdf.GeneratePdf(data);
-            return File(pdfBytes,"application/pdf", $"{model.Customer.Name}- رقم الفاتورة: {model.ID}.pdf");
+            return Ok(pdfBytes);
+            //return File(pdfBytes,"application/pdf", $"{model.Customer.Name}- رقم الفاتورة: {model.ID}.pdf");
         }
 
         [HttpGet("ImportRecieptPrint/{Id}")]
@@ -88,7 +89,8 @@ namespace API_and_DataBase.Controllers
             };
 
             byte[] pdfBytes = pdf.GeneratePdf(data);
-            return File(pdfBytes, "application/pdf", $"{model.Supplier.Name}- رقم الفاتورة: {model.ID}.pdf");
+            return Ok(pdfBytes);
+            //return File(pdfBytes, "application/pdf", $"{model.Supplier.Name}- رقم الفاتورة: {model.ID}.pdf");
         }
     }
 }
