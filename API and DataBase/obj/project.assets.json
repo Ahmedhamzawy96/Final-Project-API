@@ -1792,6 +1792,19 @@
           }
         }
       },
+      "NReco.PdfGenerator/1.2.1": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/NReco.PdfGenerator.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/NReco.PdfGenerator.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "NuGet.Common/6.2.1": {
         "type": "package",
         "dependencies": {
@@ -6430,6 +6443,21 @@
         "packageIcon.png"
       ]
     },
+    "NReco.PdfGenerator/1.2.1": {
+      "sha512": "YONMIaSBJO/0FKcXMyO1KZWc83IqfrbBKw5fcRxrwgxzv5r89rh/Z6r7ukuJmx+ra3m6jz6gmaEYXFWV3dKTmg==",
+      "type": "package",
+      "path": "nreco.pdfgenerator/1.2.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net45/NReco.PdfGenerator.dll",
+        "lib/net45/NReco.PdfGenerator.xml",
+        "lib/netstandard2.0/NReco.PdfGenerator.dll",
+        "lib/netstandard2.0/NReco.PdfGenerator.xml",
+        "nreco.pdfgenerator.1.2.1.nupkg.sha512",
+        "nreco.pdfgenerator.nuspec"
+      ]
+    },
     "NuGet.Common/6.2.1": {
       "sha512": "qmC7zVUdYaz1lE4tw4dceTFnmVho36tut8R/gvxLIixtjGhIZDIvdo4wUUIDLXrDxublaQYMay1+QotTOUIj8g==",
       "type": "package",
@@ -11022,6 +11050,7 @@
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.7",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.7",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.7",
+      "NReco.PdfGenerator >= 1.2.1",
       "Newtonsoft.Json >= 13.0.1",
       "Swashbuckle.AspNetCore >= 6.4.0",
       "System.IdentityModel.Tokens.Jwt >= 6.22.0"
@@ -11033,11 +11062,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+      "projectUniqueName": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
       "projectName": "API and DataBase",
-      "projectPath": "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+      "projectPath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
       "packagesPath": "C:\\Users\\ahmed\\.nuget\\packages\\",
-      "outputPath": "D:\\AmanData\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\obj\\",
+      "outputPath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ahmed\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -11093,6 +11122,10 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[6.0.7, )"
+          },
+          "NReco.PdfGenerator": {
+            "target": "Package",
+            "version": "[1.2.1, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",

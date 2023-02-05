@@ -1,4 +1,5 @@
 ﻿using API_and_DataBase.Models;
+using System.Globalization;
 
 namespace API_and_DataBase.DTO.Extension_Methods
 {
@@ -261,7 +262,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     Price = importProductDTO.BuyingPrice,
                     Quantity = importProductDTO.Quantity,
                     TotalPrice = importProductDTO.TotalPrice,
-                   
+
                 };
             }
             else
@@ -282,7 +283,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ExportRecieptDTO
                 {
                     ID = exportReciept.ID,
-                    Date = exportReciept.Date.ToString(),
+                    Date = exportReciept.Date.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
                     Total = exportReciept.Total,
                     Notes = exportReciept.Notes,
                     Paid = exportReciept.Paid,
@@ -307,7 +308,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ExportReciept
                 {
                     ID = exportRecieptDTO.ID,
-                    Date = Convert.ToDateTime(exportRecieptDTO.Date),
+                    Date = DateTime.UtcNow.AddHours(2),
                     Total = exportRecieptDTO.Total,
                     Notes = exportRecieptDTO.Notes,
                     Paid = exportRecieptDTO.Paid,
@@ -315,7 +316,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     CustomerID = exportRecieptDTO.customerID,
                     UserName = exportRecieptDTO.UserName,
                     CarID = exportRecieptDTO.CarID,
-                    
+
                 };
             }
             else
@@ -335,7 +336,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ImportRecieptDTO
                 {
                     ID = importReciept.ID,
-                    Date = importReciept.Date.ToString(),
+                    Date = importReciept.Date.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
                     Total = importReciept.Total,
                     Notes = importReciept.Notes,
                     Paid = importReciept.Paid,
@@ -359,7 +360,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                 return new ImportReciept
                 {
                     ID = importRecieptDTO.ID,
-                    Date = Convert.ToDateTime(importRecieptDTO.Date),
+                    Date = DateTime.UtcNow.AddHours(2),
                     Total = importRecieptDTO.Total,
                     Notes = importRecieptDTO.Notes,
                     Paid = importRecieptDTO.Paid,
@@ -389,12 +390,12 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     AccountType = transactions.AccountType,
                     Paid = transactions.Paid,
                     Remaining = transactions.Remaining,
-                    Type = transactions.Type,   
-                    OperationID = transactions.OperationID, 
-                    Operation = transactions.Operation, 
-                    Date = transactions.Date.ToString(),
-                    UserName = transactions.UserName,   
-                    Notes = transactions.Notes, 
+                    Type = transactions.Type,
+                    OperationID = transactions.OperationID,
+                    Operation = transactions.Operation,
+                    Date = transactions.Date.ToString("yyyy-MM-dd HH:mm ", CultureInfo.InvariantCulture),
+                    UserName = transactions.UserName,
+                    Notes = transactions.Notes,
 
                 };
             }
@@ -420,7 +421,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     Type = transactionsDTO.Type,
                     OperationID = transactionsDTO.OperationID,
                     Operation = transactionsDTO.Operation,
-                    Date = Convert.ToDateTime(transactionsDTO.Date),
+                    Date = DateTime.UtcNow.AddHours(2),
                     UserName = transactionsDTO.UserName,
                     Notes = transactionsDTO.Notes,
 

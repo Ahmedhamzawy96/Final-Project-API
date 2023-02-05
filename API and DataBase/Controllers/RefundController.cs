@@ -2,6 +2,7 @@
 using API_and_DataBase.DTO.Extension_Methods;
 using API_and_DataBase.Models;
 using API_and_DataBase.Structures;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ namespace API_and_DataBase.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class RefundController : ControllerBase
     {
 
@@ -22,7 +25,7 @@ namespace API_and_DataBase.Controllers
 
         //export reciept refund
         [HttpPost("Export/{id}")]
-        public async Task<ActionResult<ExportReciept>> ERecieptRefund(int id , ExportRecieptDTO recieptDTO)
+        public async Task<ActionResult<ExportReciept>> ERecieptRefund(int id, ExportRecieptDTO recieptDTO)
         {
             ExportReciept rec = _context.ExportReciepts.FirstOrDefault(A => A.ID == id);
             ExportReciept refundRec = recieptDTO.DTOToExportReciept();
@@ -55,9 +58,9 @@ namespace API_and_DataBase.Controllers
             _context.Transactions.Add(tr);
             foreach (var item in _context.ExportProducts.Where(A => A.ReceiptID == rec.ID).ToList())
             {
-                    item.ISDeleted = true;
-                    Product product = _context.Products.Find(item.ProductID);
-                    product.Quantity += item.Quantity;
+                item.ISDeleted = true;
+                Product product = _context.Products.Find(item.ProductID);
+                product.Quantity += item.Quantity;
 
             }
             rec.Notes = rec.Notes + " " + $" {refundRec.ID} فاتورة المرتجع رقم ";
@@ -107,11 +110,11 @@ namespace API_and_DataBase.Controllers
             supp.Account += refundRec.Remaining;
             _context.Entry(supp).State = EntityState.Modified;
             _context.Transactions.Add(tr);
-            foreach (var item in _context.ImportProducts.Where(A=> A.ReceiptID == rec.ID).ToList())
+            foreach (var item in _context.ImportProducts.Where(A => A.ReceiptID == rec.ID).ToList())
             {
-                    item.ISDeleted = true;
-                    Product product = _context.Products.Find(item.ProductID);
-                    product.Quantity -= item.Quantity;
+                item.ISDeleted = true;
+                Product product = _context.Products.Find(item.ProductID);
+                product.Quantity -= item.Quantity;
             }
             rec.Notes = rec.Notes + " " + $" {refundRec.ID} فاتورة المرتجع رقم ";
             rec.ISDeleted = true;
@@ -161,7 +164,7 @@ namespace API_and_DataBase.Controllers
             Cust.Account += refundRec.Remaining;
             _context.Entry(Cust).State = EntityState.Modified;
             _context.Transactions.Add(tr);
-            foreach (var item in _context.ExportProducts.Where(A => A.ReceiptID == rec.ID ).ToList())
+            foreach (var item in _context.ExportProducts.Where(A => A.ReceiptID == rec.ID).ToList())
             {
                 item.ISDeleted = true;
                 CarProduct product = _context.CarProducts.Find(item.ProductID);
@@ -228,7 +231,7 @@ namespace API_and_DataBase.Controllers
                 CarProduct product = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == recieptDTO.CarID);
                 product.Quantity -= item.Quantity;
             }
-             car.Account += refundRec.Remaining;
+            car.Account += refundRec.Remaining;
             _context.Entry(car).State = EntityState.Modified;
             _context.Transactions.Add(tr);
             foreach (var item in _context.ExportProducts.Where(A => A.ReceiptID == rec.ID).ToList())
@@ -250,6 +253,31 @@ namespace API_and_DataBase.Controllers
             _context.Entry(car).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpGet("ReceiptsFilter/{id}")]
+        public async Task<ActionResult<ExportRecieptDTO>> ReceiptsFilter(int id)
+        {
+            if (id == 0)
+            {
+                List<ExportRecieptDTO> rec = await _context.ExportReciepts.Where(w => w.UserName == (_context.Users.FirstOrDefault(a => a.UserName == w.UserName && a.Type != (int)userType.Car).UserName) && w.CarID == null && w.ISDeleted == false).Select(w => w.ExportRecieptToDTO()).ToListAsync();
+                return Ok(rec);
+            }
+            else if (id == 2)
+            {
+                List<ExportRecieptDTO> rec = await _context.ExportReciepts.Where(w => w.UserName == (_context.Users.FirstOrDefault(a => a.UserName == w.UserName && a.Type == (int)userType.Car).UserName) && w.ISDeleted == false).Select(w => w.ExportRecieptToDTO()).ToListAsync();
+                return Ok(rec);
+            }
+            else if (id == 3)
+            {
+                List<ExportRecieptDTO> rec = await _context.ExportReciepts.Where(w => w.CarID != null && w.ISDeleted == false).Select(w => w.ExportRecieptToDTO()).ToListAsync();
+                return Ok(rec);
+
+            }
+            else
+            {
+                return NoContent();
+            }
         }
     }
 }
