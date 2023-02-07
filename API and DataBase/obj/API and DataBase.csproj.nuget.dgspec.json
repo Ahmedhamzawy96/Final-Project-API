@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Personal\\Mokthar\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
+    "E:\\Personal\\Mokthar\\Final Project\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
   },
   "projects": {
-    "E:\\Personal\\Mokthar\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
+    "E:\\Personal\\Mokthar\\Final Project\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Personal\\Mokthar\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectUniqueName": "E:\\Personal\\Mokthar\\Final Project\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "projectName": "API and DataBase",
-        "projectPath": "E:\\Personal\\Mokthar\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectPath": "E:\\Personal\\Mokthar\\Final Project\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "packagesPath": "C:\\Users\\Health\\.nuget\\packages\\",
-        "outputPath": "E:\\Personal\\Mokthar\\Final-Project-API\\API and DataBase\\obj\\",
+        "outputPath": "E:\\Personal\\Mokthar\\Final Project\\Final-Project-API\\API and DataBase\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
