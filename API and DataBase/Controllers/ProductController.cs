@@ -29,7 +29,7 @@ namespace API_and_DataBase.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProducts()
         {
-            return await _context.Products.Where(w=>w.ISDeleted==false).Select(A=> A.ProductToDTO()).ToListAsync();
+            return await _context.Products.Where(w => w.ISDeleted == false).Select(A => A.ProductToDTO()).ToListAsync();
 
         }
 
@@ -40,24 +40,24 @@ namespace API_and_DataBase.Controllers
             var CarProducts = _context.CarProducts.ToList().Where(A => A.ISDeleted == false && A.CarID == CarID);
             var Prodducts = _context.Products.ToList().Where(A => A.ISDeleted == false);
             var ProductsInCar = new List<ProductDTO>();
-            foreach(var item in Prodducts)
+            foreach (var item in Prodducts)
             {
-                if(CarProducts.Contains(CarProducts.FirstOrDefault(A=> A.ProductID == item.ID)))
+                if (CarProducts.Contains(CarProducts.FirstOrDefault(A => A.ProductID == item.ID)))
                 {
                     item.Quantity = CarProducts.Where(A => A.ProductID == item.ID).Select(A => A.Quantity).FirstOrDefault();
-                    ProductsInCar.Add(item.ProductToDTO());    
+                    ProductsInCar.Add(item.ProductToDTO());
                 }
             }
             return Ok(ProductsInCar);
         }
- 
+
         // GET: api/Product/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null||product.ISDeleted==true)
+            if (product == null || product.ISDeleted == true)
             {
                 return NotFound();
             }
@@ -90,7 +90,7 @@ namespace API_and_DataBase.Controllers
                 }
                 else
                 {
-                    return BadRequest() ;
+                    return BadRequest();
                 }
             }
 
@@ -137,6 +137,17 @@ namespace API_and_DataBase.Controllers
                 }
             }
 
+            return NoContent();
+        }
+        //[HttpPut("/UpdateProductPrice/{Id}")]
+        [HttpPut("UpdateProductPrice/{Id}")]
+        //[Route("api/product/{Id}")]
+        public async Task<ActionResult> UpdateProductPrice(int Id ,ProductPriceDTO productPriceDTO)
+        {
+            var UpdatedProduct = await _context.Products.FindAsync(Id);
+            UpdatedProduct.BuyingPrice = productPriceDTO.buyingPrice;
+            UpdatedProduct.SellingPrice = productPriceDTO.SellingPrice;
+            await _context.SaveChangesAsync();
             return NoContent();
         }
 

@@ -262,7 +262,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     Price = importProductDTO.BuyingPrice,
                     Quantity = importProductDTO.Quantity,
                     TotalPrice = importProductDTO.TotalPrice,
-                   
+
                 };
             }
             else
@@ -389,12 +389,12 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     AccountType = transactions.AccountType,
                     Paid = transactions.Paid,
                     Remaining = transactions.Remaining,
-                    Type = transactions.Type,   
-                    OperationID = transactions.OperationID, 
-                    Operation = transactions.Operation, 
+                    Type = transactions.Type,
+                    OperationID = transactions.OperationID,
+                    Operation = transactions.Operation,
                     Date = transactions.Date.ToString("yyyy-MM-dd HH:mm ", CultureInfo.InvariantCulture),
-                    UserName = transactions.UserName,   
-                    Notes = transactions.Notes, 
+                    UserName = transactions.UserName,
+                    Notes = transactions.Notes,
 
                 };
             }

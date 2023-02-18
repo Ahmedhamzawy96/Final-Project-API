@@ -21,7 +21,6 @@ namespace API_and_DataBase.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Login userLogin)
         {
-
             Users user = db.Users.Where(n => n.UserName == userLogin.userName && n.Password == userLogin.password&&n.ISDeleted==false).FirstOrDefault();
             if (user != null)
             {

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "f42ELnt326+YxIyGju29Sh9qxPWelrzc/H6qvn+e//RsgtqgDvVr3+2BSN+VV7WKjCUc4ahRNausCpnI3i2raQ==",
+  "dgSpecHash": "TyCUM9h2ODEe0H+VNLi6FlxwdKjCsAkqoewxCY7To/ay5y5v0YuoXMdm/hYHJ3m0gFlYXOo9Q5JxboE7DQeWVQ==",
   "success": true,
   "projectFilePath": "E:\\Personal\\Mokthar\\Final Project\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
   "expectedPackageFiles": [
@@ -77,6 +77,7 @@
     "C:\\Users\\Health\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\Health\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\Health\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Health\\.nuget\\packages\\nreco.pdfgenerator\\1.2.1\\nreco.pdfgenerator.1.2.1.nupkg.sha512",
     "C:\\Users\\Health\\.nuget\\packages\\nuget.common\\6.2.1\\nuget.common.6.2.1.nupkg.sha512",
     "C:\\Users\\Health\\.nuget\\packages\\nuget.configuration\\6.2.1\\nuget.configuration.6.2.1.nupkg.sha512",
     "C:\\Users\\Health\\.nuget\\packages\\nuget.dependencyresolver.core\\5.11.0\\nuget.dependencyresolver.core.5.11.0.nupkg.sha512",
