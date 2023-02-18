@@ -316,7 +316,6 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     CustomerID = exportRecieptDTO.customerID,
                     UserName = exportRecieptDTO.UserName,
                     CarID = exportRecieptDTO.CarID,
-
                 };
             }
             else
