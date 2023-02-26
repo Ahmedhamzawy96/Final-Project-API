@@ -29,20 +29,19 @@ namespace API_and_DataBase.Controllers
         {
             var model = await  _context.ExportReciepts.Include(x => x.Customer).Where(x => x.ID == Id && !x.ISDeleted).FirstOrDefaultAsync();
             model.ExportProducts = await _context.ExportProducts.Include(x => x.Product).Where(w => w.ReceiptID == Id).ToListAsync();
-            
             var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\ExportReciept.html");
+            var products = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptProducts.html");
             StringBuilder ProductsDiv= new StringBuilder();
             foreach( var item in model.ExportProducts)
             {
-                ProductsDiv.Append(
-                    $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
-                    $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
-                    $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
-                    $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
-                    );
+               var prods = products.Replace("[ProductName]", item.Product.Name)
+                        .Replace("[Quantity]",item.Quantity.ToString())
+                        .Replace("[SellingPrice]",(item.TotalPrice/item.Quantity).ToString())
+                        .Replace("[TotalPrice]",item.TotalPrice.ToString());
+                ProductsDiv.Append(prods);
             }
-            data= data.Replace("[ExportRecieptDate]", model.Date.ToString("dd-MM-yyyy"))
-                .Replace("[ExportRecieptTime]",model.Date.ToString("HH:mm"))
+            data= data.Replace("[ExportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
+                .Replace("[ExportRecieptTime]",model.Date.ToString("hh:mm:ss tt"))
                 .Replace("[ExportRecieptUserName]", model.UserName)
                 .Replace("[CustomerName]",model.Customer.Name)
                 .Replace("[ExportRecieptTotal]",model.Total.ToString())
@@ -66,16 +65,15 @@ namespace API_and_DataBase.Controllers
             var model = await _context.ImportReciepts.Include(x => x.Supplier).Where(x => x.ID == Id && !x.ISDeleted).FirstOrDefaultAsync();
             model.ImportProducts = await _context.ImportProducts.Include(x => x.Product).Where(w => w.ReceiptID == Id).ToListAsync();
             var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\ImportReciept.html");
-            //var products = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptProducts.html");
+            var products = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptProducts.html");
             StringBuilder ProductsDiv = new StringBuilder();
             foreach (var item in model.ImportProducts)
             {
-                ProductsDiv.Append(
-                   $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
-                   $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
-                   $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
-                   $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
-                   );
+                var prods = products.Replace("[ProductName]", item.Product.Name)
+                         .Replace("[Quantity]", item.Quantity.ToString())
+                         .Replace("[SellingPrice]", (item.TotalPrice / item.Quantity).ToString())
+                         .Replace("[TotalPrice]", item.TotalPrice.ToString());
+                ProductsDiv.Append(prods);
             }
             data = data.Replace("[ImportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
                 .Replace("[ImportRecieptTime]", model.Date.ToString("hh:mm:ss tt"))
