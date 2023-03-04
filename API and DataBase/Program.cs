@@ -14,8 +14,8 @@ string ploicy = " ";
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("Data Source=SQL8004.site4now.net;Initial Catalog=db_a8b9a3_elmokhtar;User Id=db_a8b9a3_elmokhtar_admin;Password=@A123456"));
-builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("Data Source=.;Initial Catalog=ElMokhtarDB;integrated security=true;persist security info=false"));
+builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("Data Source=SQL8004.site4now.net;Initial Catalog=db_a8b9a3_elmokhtar;User Id=db_a8b9a3_elmokhtar_admin;Password=@A123456"));
+//builder.Services.AddDbContext<CompanyContext>(Options => Options.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=db_a8b9a3_elmokhtar;integrated security=true;persist security info=false"));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
