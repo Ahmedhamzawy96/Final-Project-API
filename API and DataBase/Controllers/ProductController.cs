@@ -139,9 +139,7 @@ namespace API_and_DataBase.Controllers
 
             return NoContent();
         }
-        //[HttpPut("/UpdateProductPrice/{Id}")]
         [HttpPut("UpdateProductPrice/{Id}")]
-        //[Route("api/product/{Id}")]
         public async Task<ActionResult> UpdateProductPrice(int Id ,ProductPriceDTO productPriceDTO)
         {
             var UpdatedProduct = await _context.Products.FindAsync(Id);
@@ -155,15 +153,6 @@ namespace API_and_DataBase.Controllers
         {
             return _context.Products.Any(e => e.ID == id&&e.ISDeleted==false);
         }
-
-        [HttpPut("UpdateProductPrice/{Id}")]
-        public async Task<ActionResult> UpdateProductPrice(int Id, ProductPriceDTO productPriceDTO)
-        {
-            var UpdatedProduct = await _context.Products.FindAsync(Id);
-            UpdatedProduct.BuyingPrice = productPriceDTO.buyingPrice;
-            UpdatedProduct.SellingPrice = productPriceDTO.SellingPrice;
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
+ 
     }
 }

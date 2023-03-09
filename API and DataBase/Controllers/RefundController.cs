@@ -47,7 +47,7 @@ namespace API_and_DataBase.Controllers
             };
             foreach (var item in recieptDTO.Products)
             {
-                item.ExportReceiptID = recieptDTO.ID;
+                item.ExportReceiptID = refundRec.ID;
                 _context.ExportProducts.Add(item.DTOToExportProduct());
                 Product product = _context.Products.Find(item.ProductID);
                 product.Quantity -= item.Quantity;
@@ -100,7 +100,7 @@ namespace API_and_DataBase.Controllers
             };
             foreach (var item in recieptDTO.importProducts)
             {
-                item.ImportReceiptID = recieptDTO.ID;
+                item.ImportReceiptID = refundRec.ID;
                 _context.ImportProducts.Add(item.DTOToImportProduct());
 
                 Product product = _context.Products.Find(item.ProductID);
@@ -156,7 +156,7 @@ namespace API_and_DataBase.Controllers
 
             foreach (var item in recieptDTO.Products)
             {
-                item.ExportReceiptID = recieptDTO.ID;
+                item.ExportReceiptID = refundRec.ID;
                 _context.ExportProducts.Add(item.DTOToExportProduct());
 
                 CarProduct product = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == carid);
@@ -212,12 +212,12 @@ namespace API_and_DataBase.Controllers
             };
             foreach (var item in recieptDTO.Products)
             {
-                item.ExportReceiptID = recieptDTO.ID;
+                item.ExportReceiptID = refundRec.ID;
                 if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID) == null)
                 {
                     CarProduct carpr = new CarProduct()
                     {
-                        CarID = recieptDTO.CarID,
+                        CarID = refundRec.CarID,
                         ProductID = item.ProductID,
                         Quantity = item.Quantity,
                     };
