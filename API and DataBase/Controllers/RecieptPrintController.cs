@@ -35,11 +35,19 @@ namespace API_and_DataBase.Controllers
             foreach( var item in model.ExportProducts)
             {
                 ProductsDiv.Append(
+<<<<<<< Updated upstream
                     $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
                     $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
                     $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
                     $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
                     );
+=======
+                   $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
+                   $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
+                   $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
+                   $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
+                   );
+>>>>>>> Stashed changes
             }
             data= data.Replace("[ExportRecieptDate]", model.Date.ToString("dd-MM-yyyy"))
                 .Replace("[ExportRecieptTime]",model.Date.ToString("HH:mm"))
@@ -52,7 +60,7 @@ namespace API_and_DataBase.Controllers
                 .Replace("[RecieptProducts]", ProductsDiv.ToString());
             HtmlToPdfConverter pdf = new HtmlToPdfConverter()
             {
-                Size = PageSize.Letter
+                Size = PageSize.A6
             };
 
             byte[] pdfBytes = pdf.GeneratePdf(data);
@@ -71,23 +79,35 @@ namespace API_and_DataBase.Controllers
             foreach (var item in model.ImportProducts)
             {
                 ProductsDiv.Append(
+<<<<<<< Updated upstream
                    $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
                    $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
                    $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
                    $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
                    );
+=======
+                $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
+                $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
+                $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
+                $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
+                );
+>>>>>>> Stashed changes
             }
+
+
             data = data.Replace("[ImportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
                 .Replace("[ImportRecieptTime]", model.Date.ToString("hh:mm:ss tt"))
                 .Replace("[ImportRecieptUserName]", model.UserName)
                 .Replace("[SuppLierName]", model.Supplier.Name)
+                .Replace("[RecieptProducts]", ProductsDiv.ToString())
                 .Replace("[ImportRecieptTotal]", model.Total.ToString())
                 .Replace("[ImportRecieptPaid]", model.Paid.ToString())
-                .Replace("[ImportRecieptRemaining]", model.Remaining.ToString())
-                .Replace("[RecieptProducts]", ProductsDiv.ToString());
+                .Replace("[SupplierAccount]", model.Supplier.Account.ToString())
+                .Replace("[ImportRecieptRemaining]", (model.Supplier.Account - model.Remaining).ToString());
+
             HtmlToPdfConverter pdf = new HtmlToPdfConverter()
             {
-                Size = PageSize.Letter
+                Size = PageSize.A6
             };
 
             byte[] pdfBytes = pdf.GeneratePdf(data);

@@ -152,12 +152,14 @@ namespace API_and_DataBase.Controllers
                 UserName = refundRec.UserName,
                 Notes = $"{rec.ID} مرتجع فاتورة رقم"
             };
+            int? carid = _context.Users.FirstOrDefault(w => w.UserName == rec.UserName).CarID;
+
             foreach (var item in recieptDTO.Products)
             {
                 item.ExportReceiptID = recieptDTO.ID;
                 _context.ExportProducts.Add(item.DTOToExportProduct());
 
-                CarProduct product = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == recieptDTO.CarID);
+                CarProduct product = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == carid);
                 product.Quantity -= item.Quantity;
             }
             Customer Cust = _context.Customers.Find(refundRec.CustomerID);
@@ -167,7 +169,7 @@ namespace API_and_DataBase.Controllers
             foreach (var item in _context.ExportProducts.Where(A => A.ReceiptID == rec.ID).ToList())
             {
                 item.ISDeleted = true;
-                CarProduct product = _context.CarProducts.Find(item.ProductID);
+                CarProduct product = _context.CarProducts.FirstOrDefault(w=>w.ProductID==item.ProductID);
                 product.Quantity += item.Quantity;
 
             }
