@@ -34,11 +34,13 @@ namespace API_and_DataBase.Controllers
             StringBuilder ProductsDiv= new StringBuilder();
             foreach( var item in model.ExportProducts)
             {
-               var prods = products.Replace("[ProductName]", item.Product.Name)
-                        .Replace("[Quantity]",item.Quantity.ToString())
-                        .Replace("[SellingPrice]",(item.TotalPrice/item.Quantity).ToString())
-                        .Replace("[TotalPrice]",item.TotalPrice.ToString());
-                ProductsDiv.Append(prods);
+                ProductsDiv.Append(
+
+                    $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
+                    $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
+                    $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
+                    $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
+                    );
             }
             data= data.Replace("[ExportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
                 .Replace("[ExportRecieptTime]",model.Date.ToString("hh:mm:ss tt"))
@@ -51,7 +53,7 @@ namespace API_and_DataBase.Controllers
                 .Replace("[RecieptProducts]", ProductsDiv.ToString());
             HtmlToPdfConverter pdf = new HtmlToPdfConverter()
             {
-                Size = PageSize.Letter
+                Size = PageSize.A6
             };
 
             byte[] pdfBytes = pdf.GeneratePdf(data);
@@ -69,23 +71,29 @@ namespace API_and_DataBase.Controllers
             StringBuilder ProductsDiv = new StringBuilder();
             foreach (var item in model.ImportProducts)
             {
-                var prods = products.Replace("[ProductName]", item.Product.Name)
-                         .Replace("[Quantity]", item.Quantity.ToString())
-                         .Replace("[SellingPrice]", (item.TotalPrice / item.Quantity).ToString())
-                         .Replace("[TotalPrice]", item.TotalPrice.ToString());
-                ProductsDiv.Append(prods);
+                ProductsDiv.Append(
+
+                   $"<tr>\r\n    <td style=\"text-align: center;\">{item.Product.Name}</td>\r\n   " +
+                   $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
+                   $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
+                   $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
+                   );
             }
+
+
             data = data.Replace("[ImportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
                 .Replace("[ImportRecieptTime]", model.Date.ToString("hh:mm:ss tt"))
                 .Replace("[ImportRecieptUserName]", model.UserName)
                 .Replace("[SuppLierName]", model.Supplier.Name)
+                .Replace("[RecieptProducts]", ProductsDiv.ToString())
                 .Replace("[ImportRecieptTotal]", model.Total.ToString())
                 .Replace("[ImportRecieptPaid]", model.Paid.ToString())
-                .Replace("[ImportRecieptRemaining]", model.Remaining.ToString())
-                .Replace("[RecieptProducts]", ProductsDiv.ToString());
+                .Replace("[SupplierAccount]", model.Supplier.Account.ToString())
+                .Replace("[ImportRecieptRemaining]", (model.Supplier.Account - model.Remaining).ToString());
+
             HtmlToPdfConverter pdf = new HtmlToPdfConverter()
             {
-                Size = PageSize.Letter
+                Size = PageSize.A6
             };
 
             byte[] pdfBytes = pdf.GeneratePdf(data);

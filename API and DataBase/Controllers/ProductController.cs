@@ -57,7 +57,7 @@ namespace API_and_DataBase.Controllers
         {
             var product = await _context.Products.FindAsync(id);
 
-            if (product == null || product.ISDeleted == true)
+            if (product == null)
             {
                 return NotFound();
             }

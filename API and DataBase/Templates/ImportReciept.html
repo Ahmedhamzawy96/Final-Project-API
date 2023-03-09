@@ -6,11 +6,7 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
     />
     <style>
-      @media print {
-        footer {
-          page-break-after: always;
-        }
-      }
+  
 
       .column {
         float: left;
@@ -21,22 +17,18 @@
         display: flex;
       }
 
-      table,
-      th,
-      td {
-        border: 1px solid black;
-        border-collapse: collapse;
+      table
+     {
+      border: none;
+        border-collapse:separate; 
+        border-spacing: 0 .75em;
       }
+      tbody tr {font-size: 20px;}
 
-      footer {
-        page-break-after: always;
-      }
     </style>
   </head>
   <div id="Print">
-    <div
-      style="border-style: solid; height: 34cm; width: 26cm; font-size: 15pt"
-    >
+    <div>
       <div style="padding: 15px">
         <!-- Mian Reciept Data  -->
         <div>
@@ -72,15 +64,14 @@
         <!-- Reciept Product Data  -->
         <div>
           <table style="width:100%">
-            <thead>
-              <tr>
-                  <td style="text-align: center;">الصنف</td>
-                  <td style="text-align: center;">الكمية</td>
-                  <td style="text-align: center;">سعر البيع</td>
-                  <td style="text-align: center;">الاجمالي</td>
-              </tr>
-            </thead>
+
             <tbody>
+              <tr style="font-weight: bold;">
+                <td style="text-align: center;">الصنف</td>
+                <td style="text-align: center;">الكمية</td>
+                <td style="text-align: center;">سعر البيع</td>
+                <td style="text-align: center;">الاجمالي</td>
+            </tr>
               [RecieptProducts]
             </tbody>
         </table>
@@ -97,14 +88,17 @@
           </div>
           <br>
           <div style="display: flex; text-align: center;">
-            <div style="float: right; width: 33.33%;">
+            <div style="float: right; width: 50%;">
                 <p style="font-size: 12pt;">الاجمالي: [ImportRecieptTotal]</p>
             </div>
-            <div style="float: right; width: 33.3%;">
+            <div style="float: right; width: 50%;">
                 <p style="font-size: 12pt;">المبلغ المدفوع: [ImportRecieptPaid]</p>
             </div>
-            <div class="column" style="width: 33.3%;">
-                <p style="font-size: 12pt;">المبلغ المتبقي : [ImportRecieptRemaining]</p>
+            <div class="column" style="width: 50%;">
+              <p style="font-size: 12pt;"> الحساب الحالي للمورد : [SupplierAccount]</p>
+          </div>
+            <div class="column" style="width: 50%;">
+                <p style="font-size: 12pt;">الحساب السابق للمورد : [ImportRecieptRemaining]</p>
             </div>
       </div>
     </div>

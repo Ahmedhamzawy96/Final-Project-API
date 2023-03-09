@@ -157,7 +157,7 @@ namespace API_and_DataBase.Controllers
         }
 
 
-        [HttpGet("ProfitMargin")]
+        [HttpGet("ProfitMargin/{carid?}")]
         public async Task<ActionResult<TransactionsDTO>> ProfitMargin([FromQuery] string sdate, [FromQuery] string edate, int? carid)
         {
             DateTime date = Convert.ToDateTime(sdate);
@@ -167,8 +167,9 @@ namespace API_and_DataBase.Controllers
                                         on er.ID equals ep.ReceiptID
                                   join u in _context.Users on er.UserName equals u.UserName
                                   join P in _context.Products on ep.ProductID equals P.ID
+                                  join cu in _context.Customers on er.CustomerID equals cu.ID
                                   where er.ISDeleted == false && er.Date.Date >= date.Date && er.Date.Date <= Edta.Date
-                                  group new { P, ep } by new { u.UserName, u.Type, er.ID, er.CustomerID, u.CarID, er.Date } into g
+                                  group new { P, ep } by new { u.UserName, u.Type, er.ID, er.CustomerID, u.CarID, er.Date,cu.Name } into g
                                   orderby g.Key.ID
                                   select new
                                   {
@@ -176,14 +177,15 @@ namespace API_and_DataBase.Controllers
                                       Type = g.Key.Type,
                                       ID = g.Key.ID,
                                       CustomerID = g.Key.CustomerID,
+                                      CustomerName = g.Key.Name,
                                       SellingPrice = g.Sum(x => x.ep.Price * x.ep.Quantity),
                                       BuyingPrice = g.Sum(x => x.P.BuyingPrice * x.ep.Quantity),
                                       CarID = g.Key.CarID,
-                                      Date = g.Key.Date,
+                                      Date = g.Key.Date.ToString("yyyy-mm-dd"),
                                   }
                                         ).ToListAsync();
 
-
+            
             if (carid != null)
             {
                 Receipts = Receipts.Where(x => x.Type == (int)userType.Car).ToList();
@@ -192,6 +194,7 @@ namespace API_and_DataBase.Controllers
             {
                 Receipts = Receipts.Where(x => x.Type != (int)userType.Car).ToList();
             }
+            
             decimal? Buyingprice = Receipts.Sum(w => w.BuyingPrice);
             decimal? SellingPrice = Receipts.Sum(w => w.SellingPrice);
 
