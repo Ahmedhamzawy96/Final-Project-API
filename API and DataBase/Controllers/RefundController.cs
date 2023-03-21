@@ -169,7 +169,7 @@ namespace API_and_DataBase.Controllers
             foreach (var item in _context.ExportProducts.Where(A => A.ReceiptID == rec.ID).ToList())
             {
                 item.ISDeleted = true;
-                CarProduct product = _context.CarProducts.FirstOrDefault(w=>w.ProductID==item.ProductID);
+                CarProduct product = _context.CarProducts.FirstOrDefault(w=>w.ProductID == item.ProductID && w.CarID == carid);
                 product.Quantity += item.Quantity;
 
             }
@@ -213,7 +213,8 @@ namespace API_and_DataBase.Controllers
             foreach (var item in recieptDTO.Products)
             {
                 item.ExportReceiptID = refundRec.ID;
-                if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID) == null)
+                _context.ExportProducts.Add(item.DTOToExportProduct());
+                if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID ==  refundRec.CarID) == null)
                 {
                     CarProduct carpr = new CarProduct()
                     {
@@ -225,7 +226,7 @@ namespace API_and_DataBase.Controllers
                 }
                 else
                 {
-                    CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID);
+                    CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID &&  w.CarID == refundRec.CarID);
                     carpr.Quantity += item.Quantity;
                     _context.Entry(carpr).State = EntityState.Modified;
                 }
@@ -241,7 +242,8 @@ namespace API_and_DataBase.Controllers
                 item.ISDeleted = true;
                 Product product = _context.Products.Find(item.ProductID);
                 product.Quantity += item.Quantity;
-                CarProduct Carproduct = _context.CarProducts.Find(item.ProductID);
+                //CarProduct Carproduct = _context.CarProducts.Find(item.ProductID );
+                CarProduct Carproduct = _context.CarProducts.FirstOrDefault(x => x.ProductID ==  item.ProductID && x.CarID == recieptDTO.CarID );
                 Carproduct.Quantity -= item.Quantity;
 
             }

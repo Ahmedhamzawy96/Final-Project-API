@@ -180,7 +180,7 @@ namespace API_and_DataBase.Controllers
                     _context.Entry(product).State = EntityState.Modified;
 
                     #region Add porduct ro car store
-                    if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID) == null)
+                    if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID) == null)
                     {
                         CarProduct carpr = new CarProduct()
                         {
@@ -192,7 +192,7 @@ namespace API_and_DataBase.Controllers
                     }
                     else
                     {
-                        CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID);
+                        CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID);
                         carpr.Quantity += item.Quantity;
                         _context.Entry(carpr).State = EntityState.Modified;
                     }
