@@ -42,14 +42,14 @@ namespace API_and_DataBase.Controllers
                     $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
                     );
             }
-            data= data.Replace("[ExportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
-                .Replace("[ExportRecieptTime]",model.Date.ToString("hh:mm:ss tt"))
+            data = data.Replace("[ExportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
+                .Replace("[ExportRecieptTime]", model.Date.ToString("hh:mm:ss tt"))
                 .Replace("[ExportRecieptUserName]", model.UserName)
-                .Replace("[CustomerName]",model.Customer.Name)
-                .Replace("[ExportRecieptTotal]",model.Total.ToString())
-                .Replace("[ExportRecieptPaid]",model.Paid.ToString())
-                .Replace("[Remaining]", (model.Customer.Account - model.Remaining).ToString())
-                .Replace("[CustomerAccount]",model.Customer.Account.ToString())
+                .Replace("[CustomerName]", model?.Customer?.Name ?? string.Empty)
+                .Replace("[ExportRecieptTotal]", model.Total.ToString())
+                .Replace("[ExportRecieptPaid]", model.Paid.ToString())
+                .Replace("[Remaining]", model?.PreviousAccount.ToString())
+                .Replace("[CustomerAccount]", model?.CurrentAccount.ToString() ?? string.Empty)
                 .Replace("[RecieptProducts]", ProductsDiv.ToString());
             HtmlToPdfConverter pdf = new HtmlToPdfConverter()
             {
@@ -99,6 +99,37 @@ namespace API_and_DataBase.Controllers
             byte[] pdfBytes = pdf.GeneratePdf(data);
             return Ok(pdfBytes);
             //return File(pdfBytes, "application/pdf", $"{model.Supplier.Name}- رقم الفاتورة: {model.ID}.pdf");
+        }
+
+        [HttpPost("RecieptPreview")]
+        public async Task<IActionResult> RecieptPreview(ExportRecieptDTO recieptDTO)
+        {
+            var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptPreview.html");
+            var products = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptProducts.html");
+            StringBuilder ProductsDiv = new StringBuilder();
+            foreach (var item in recieptDTO.Products)
+            {
+                ProductsDiv.Append(
+
+                    $"<tr>\r\n    <td style=\"text-align: center;\">{item.ProductName}</td>\r\n   " +
+                    $" <td style=\"text-align: center;\">{item.Quantity.ToString()}</td>\r\n  " +
+                    $"  <td style=\"text-align: center;\">{(item.TotalPrice / item.Quantity).ToString()}</td>\r\n    " +
+                    $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
+                    );
+            }
+            data = data.Replace("[ExportRecieptDate]", DateTime.Parse(recieptDTO.Date).ToString("dd/mm/yyyy"))
+                .Replace("[ExportRecieptTime]", DateTime.Parse(recieptDTO.Date).ToString("hh:mm:ss tt"))
+                .Replace("[ExportRecieptUserName]", recieptDTO.UserName)
+                .Replace("[ExportRecieptTotal]", recieptDTO.Total.ToString())
+                .Replace("[RecieptProducts]", ProductsDiv.ToString());
+            HtmlToPdfConverter pdf = new HtmlToPdfConverter()
+            {
+                Size = PageSize.A6
+            };
+
+            byte[] pdfBytes = pdf.GeneratePdf(data);
+            return Ok(pdfBytes);
+            //return File(pdfBytes,"application/pdf", $"{model.Customer.Name}- رقم الفاتورة: {model.ID}.pdf");
         }
     }
 }

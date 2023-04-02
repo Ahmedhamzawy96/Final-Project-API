@@ -4,6 +4,7 @@ using API_and_DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API_and_DataBase.Migrations
 {
     [DbContext(typeof(CompanyContext))]
-    partial class CompanyContextModelSnapshot : ModelSnapshot
+    [Migration("20230331224358_ExportRecieptAccount")]
+    partial class ExportRecieptAccount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,11 +364,9 @@ namespace API_and_DataBase.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("UserName");
 
                     b.ToTable("Transactions");
                 });
@@ -482,15 +482,6 @@ namespace API_and_DataBase.Migrations
                         .HasForeignKey("UserName");
 
                     b.Navigation("Supplier");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("API_and_DataBase.Models.Transactions", b =>
-                {
-                    b.HasOne("API_and_DataBase.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserName");
 
                     b.Navigation("User");
                 });
