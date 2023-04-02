@@ -58,6 +58,19 @@ namespace API_and_DataBase.Controllers
 
             return Ok(transactions.Select(A => A.TransactionsToDTO()));
         }
+        [HttpGet("CarTransaction/{id}/{type}")]
+        public async Task<ActionResult<TransactionsDTO>> GetCarTransactions(int id, int type)
+        {
+            List<Transactions> transactions = await _context.Transactions.Where(A => A.User.CarID  == id&& A.AccountType== type && A.ISDeleted == false)
+                .ToListAsync();
+
+            if (transactions == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(transactions.Select(A => A.TransactionsToDTO()));
+        }
 
         // PUT: api/Transactions/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

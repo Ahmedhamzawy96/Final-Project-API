@@ -18,7 +18,8 @@ namespace API_and_DataBase.Models
         public virtual Users User { get; set; }
 
         public virtual Car Car { get; set; }
-
+        public decimal? PreviousAccount { get; set; }
+        public decimal? CurrentAccount { get; set; }
 
         [ForeignKey("Customer")]
         public int? CustomerID { get; set; }

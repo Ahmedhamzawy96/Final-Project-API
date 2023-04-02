@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0Y3zxH9VXItc4rv5wxiSwpUemhbAAfiwMsJggn/G40G8n89d9Iw7pOulRkgu7zv1CvKW+V5Tch0npqzsjTV/Yg==",
+  "dgSpecHash": "Lb9XRpMRaJFXgcQfHQUEL5q9Jx4UkpPE7rn9wUu0ICUUWlfo3+cV1miPsVEtzp1COl1NC2xNbiKRozCrkNsAGg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\ahmed_seddek\\Desktop\\APII\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+  "projectFilePath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ahmed_seddek\\.nuget\\packages\\castle.core\\4.4.1\\castle.core.4.4.1.nupkg.sha512",
     "C:\\Users\\ahmed_seddek\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ahmed_seddek\\Desktop\\APII\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
+    "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ahmed_seddek\\Desktop\\APII\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
+    "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ahmed_seddek\\Desktop\\APII\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectUniqueName": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "projectName": "API and DataBase",
-        "projectPath": "C:\\Users\\ahmed_seddek\\Desktop\\APII\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectPath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "packagesPath": "C:\\Users\\ahmed_seddek\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ahmed_seddek\\Desktop\\APII\\Final-Project-API\\API and DataBase\\obj\\",
+        "outputPath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ahmed_seddek\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -104,7 +104,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.103\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
