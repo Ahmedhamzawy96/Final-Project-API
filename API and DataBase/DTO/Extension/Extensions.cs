@@ -292,7 +292,7 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     UserName = exportReciept.UserName,
                     CarID = exportReciept.CarID,
                     CurrentAccount = exportReciept?.CurrentAccount ?? exportReciept?.Customer?.Account,
-                    PreviousAccount = exportReciept?.PreviousAccount ?? exportReciept?.Customer?.Account,
+                    PreviousAccount = exportReciept?.PreviousAccount ?? 0,
                 };
             }
             else
@@ -318,8 +318,8 @@ namespace API_and_DataBase.DTO.Extension_Methods
                     CustomerID = exportRecieptDTO.customerID,
                     UserName = exportRecieptDTO.UserName,
                     CarID = exportRecieptDTO.CarID,
-                    CurrentAccount = exportRecieptDTO.CurrentAccount,
-                    PreviousAccount = exportRecieptDTO.PreviousAccount,
+                    CurrentAccount = exportRecieptDTO?.CurrentAccount ?? 0,
+                    PreviousAccount = exportRecieptDTO?.PreviousAccount ?? 0,
                 };
             }
             else
