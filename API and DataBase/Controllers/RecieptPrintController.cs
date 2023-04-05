@@ -28,6 +28,8 @@ namespace API_and_DataBase.Controllers
         public async Task<IActionResult> PrintEReciept(int Id) 
         {
             var model = await  _context.ExportReciepts.Include(x => x.Customer).Where(x => x.ID == Id && !x.ISDeleted).FirstOrDefaultAsync();
+            model.CurrentAccount = (model.CurrentAccount == 0 || model.CurrentAccount == null )? model.Customer.Account : model.CurrentAccount;
+            model.PreviousAccount = (model.PreviousAccount == 0 || model.PreviousAccount == null ) ? (model.Customer.Account - model.Remaining) : model.CurrentAccount;
             model.ExportProducts = await _context.ExportProducts.Include(x => x.Product).Where(w => w.ReceiptID == Id).ToListAsync();
             var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\ExportReciept.html");
             var products = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptProducts.html");
@@ -42,7 +44,7 @@ namespace API_and_DataBase.Controllers
                     $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
                     );
             }
-            data = data.Replace("[ExportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
+            data = data.Replace("[ExportRecieptDate]", model.Date.ToString("dd-MM-yyyy"))
                 .Replace("[ExportRecieptTime]", model.Date.ToString("hh:mm:ss tt"))
                 .Replace("[ExportRecieptUserName]", model.UserName)
                 .Replace("[CustomerName]", model?.Customer?.Name ?? string.Empty)
@@ -81,7 +83,7 @@ namespace API_and_DataBase.Controllers
             }
 
 
-            data = data.Replace("[ImportRecieptDate]", model.Date.ToString("dd/mm/yyyy"))
+            data = data.Replace("[ImportRecieptDate]", model.Date.ToString("dd-MM-yyyy"))
                 .Replace("[ImportRecieptTime]", model.Date.ToString("hh:mm:ss tt"))
                 .Replace("[ImportRecieptUserName]", model.UserName)
                 .Replace("[SuppLierName]", model.Supplier.Name)
@@ -117,7 +119,7 @@ namespace API_and_DataBase.Controllers
                     $"<td style=\"text-align: center;\">{item.TotalPrice.ToString()}\r\n</tr>"
                     );
             }
-            data = data.Replace("[ExportRecieptDate]", DateTime.Parse(recieptDTO.Date).ToString("dd/mm/yyyy"))
+            data = data.Replace("[ExportRecieptDate]", DateTime.Parse(recieptDTO.Date).ToString("dd-MM-yyyy"))
                 .Replace("[ExportRecieptTime]", DateTime.Parse(recieptDTO.Date).ToString("hh:mm:ss tt"))
                 .Replace("[ExportRecieptUserName]", recieptDTO.UserName)
                 .Replace("[ExportRecieptTotal]", recieptDTO.Total.ToString())

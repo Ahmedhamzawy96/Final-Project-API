@@ -31,14 +31,15 @@ namespace API_and_DataBase.Controllers
         public async Task<ActionResult<IEnumerable<ExportRecieptDTO>>> GetExportReciepts()
         {
 
-            return await _context.ExportReciepts.Where(e => e.ISDeleted == false).Select(w => w.ExportRecieptToDTO()).ToListAsync();
+            return await _context.ExportReciepts.Where(e => e.ISDeleted == false).Include(z => z.Customer).Select(w => w.ExportRecieptToDTO()).ToListAsync();
         }
 
         // GET: api/ExportReciept/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ExportRecieptDTO>> GetExportReciept(int id)
         {
-            var exportReciept = await _context.ExportReciepts.FindAsync(id);
+             var exportReciept = await _context.ExportReciepts.Include(z => z.Customer).FirstOrDefaultAsync(x => x.ID == id);
+
             List<ExportProduct> exportproducts = _context.ExportProducts.Where(w => w.ReceiptID == id).ToList();
 
             if (exportReciept == null || exportReciept.ISDeleted == true)

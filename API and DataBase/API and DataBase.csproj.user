@@ -10,6 +10,6 @@
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_DbContextTypeFullName>API_and_DataBase.Models.CompanyContext</WebStackScaffolding_DbContextTypeFullName>
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
-    <NameOfLastUsedPublishProfile>D:\Hamzawy\Study\Projects\API\ElMoktar API\Old Version\Final-Project-API\API and DataBase\Properties\PublishProfiles\abdallahmaher-001-site1 - FTP.pubxml</NameOfLastUsedPublishProfile>
+    <NameOfLastUsedPublishProfile>D:\Hamzawy\Study\Projects\API\ElMoktar API\Old Version\Final-Project-API\API and DataBase\Properties\PublishProfiles\FolderProfile1.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>
