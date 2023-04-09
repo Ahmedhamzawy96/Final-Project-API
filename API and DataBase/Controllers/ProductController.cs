@@ -153,6 +153,12 @@ namespace API_and_DataBase.Controllers
         {
             return _context.Products.Any(e => e.ID == id&&e.ISDeleted==false);
         }
+
+        [HttpGet("ProductByQuantity/{Quantity}")]
+        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetProductsByQuantity(int Quantity)
+        {
+            return await _context.Products.Where(x => !x.ISDeleted && x.Quantity <= Quantity).Select(x => x.ProductToDTO()).ToListAsync();
+        }
  
     }
 }

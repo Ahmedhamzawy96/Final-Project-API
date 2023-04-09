@@ -29,7 +29,7 @@ namespace API_and_DataBase.Controllers
         {
             var model = await  _context.ExportReciepts.Include(x => x.Customer).Where(x => x.ID == Id && !x.ISDeleted).FirstOrDefaultAsync();
             model.CurrentAccount = (model.CurrentAccount == 0 || model.CurrentAccount == null )? model.Customer.Account : model.CurrentAccount;
-            model.PreviousAccount = (model.PreviousAccount == 0 || model.PreviousAccount == null ) ? (model.Customer.Account - model.Remaining) : model.CurrentAccount;
+            model.PreviousAccount = (model.PreviousAccount == 0 || model.PreviousAccount == null ) ? (model.Customer.Account - model.Remaining) : model.PreviousAccount;
             model.ExportProducts = await _context.ExportProducts.Include(x => x.Product).Where(w => w.ReceiptID == Id).ToListAsync();
             var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\ExportReciept.html");
             var products = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\RecieptProducts.html");
