@@ -40,7 +40,7 @@ namespace API_and_DataBase.Controllers
         {
              var exportReciept = await _context.ExportReciepts.Include(z => z.Customer).FirstOrDefaultAsync(x => x.ID == id);
 
-            List<ExportProduct> exportproducts = _context.ExportProducts.Where(w => w.ReceiptID == id).ToList();
+            List <ExportProduct> exportproducts = _context.ExportProducts.Where(w => w.ReceiptID == id).ToList();
 
             if (exportReciept == null || exportReciept.ISDeleted == true)
             {
@@ -85,51 +85,94 @@ namespace API_and_DataBase.Controllers
         [HttpPost]
         public async Task<ActionResult<ExportReciept>> PostExportReciept(ExportRecieptDTO exportRecieptDTO)
         {
-            ExportReciept exportReciept = exportRecieptDTO.DTOToExportReciept();
-            _context.ExportReciepts.Add(exportReciept);
-            await _context.SaveChangesAsync();
-
-            Transactions tr = new Transactions();
-            Users user = _context.Users.Find(exportReciept.UserName);
-
-            #region sell to Customer
-            if (exportReciept.CarID == null)
+            try
             {
-                Customer Cust = _context.Customers.Find(exportReciept.CustomerID);
-                tr = new Transactions()
-                {
-                    AccountID = exportReciept.CustomerID,
-                    AccountType = (int)AccountType.Customer,
-                    Remaining = exportReciept.Remaining,
-                    Paid = exportReciept.Paid,
-                    Type = (int)TransType.Get,
-                    Date = exportReciept.Date,
-                    OperationID = exportReciept.ID,
-                    Operation = (int)Operation.ExportReciept,
-                    UserName = exportReciept.UserName,
-                };
-                Cust.Account += exportReciept.Remaining;
-                _context.Entry(Cust).State = EntityState.Modified;
-                _context.Transactions.Add(tr);
+                ExportReciept exportReciept = exportRecieptDTO.DTOToExportReciept();
+                _context.ExportReciepts.Add(exportReciept);
+                await _context.SaveChangesAsync();
 
-                #region User name Car
-                if (user.Type == (int)userType.Car)
+                Transactions tr = new Transactions();
+                Users user = _context.Users.Find(exportReciept.UserName);
+
+                #region sell to Customer
+                if (exportReciept.CarID == null)
                 {
-                    foreach (var item in exportRecieptDTO.Products)
+                    Customer Cust = _context.Customers.Find(exportReciept.CustomerID);
+                    tr = new Transactions()
                     {
-                        item.ExportReceiptID = exportReciept.ID;
-                        _context.ExportProducts.Add(item.DTOToExportProduct());
+                        AccountID = exportReciept.CustomerID,
+                        AccountType = (int)AccountType.Customer,
+                        Remaining = exportReciept.Remaining,
+                        Paid = exportReciept.Paid,
+                        Type = (int)TransType.Get,
+                        Date = exportReciept.Date,
+                        OperationID = exportReciept.ID,
+                        Operation = (int)Operation.ExportReciept,
+                        UserName = exportReciept.UserName,
+                    };
+                    Cust.Account += exportReciept.Remaining;
+                    _context.Entry(Cust).State = EntityState.Modified;
+                    _context.Transactions.Add(tr);
 
-                        CarProduct product = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == user.CarID);
-                        product.Quantity -= item.Quantity;
-                        _context.Entry(product).State = EntityState.Modified;
+                    #region User name Car
+                    if (user.Type == (int)userType.Car)
+                    {
+                        foreach (var item in exportRecieptDTO.Products)
+                        {
+                            item.ExportReceiptID = exportReciept.ID;
+                            _context.ExportProducts.Add(item.DTOToExportProduct());
+
+                            CarProduct product = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == user.CarID);
+                            product.Quantity -= item.Quantity;
+                            _context.Entry(product).State = EntityState.Modified;
+                        }
                     }
+                    #endregion
+
+                    #region User name Employee
+                    else
+                    {
+                        foreach (var item in exportRecieptDTO.Products)
+                        {
+                            item.ExportReceiptID = exportReciept.ID;
+                            _context.ExportProducts.Add(item.DTOToExportProduct());
+
+                            Product product = _context.Products.Find(item.ProductID);
+                            product.Quantity -= item.Quantity;
+                            _context.Entry(product).State = EntityState.Modified;
+                        }
+                    }
+                    #endregion
                 }
+
                 #endregion
 
-                #region User name Employee
+
+                /////////////////////////
+
+                #region sell to Car
                 else
                 {
+
+                    Car car = _context.Cars.Find(exportReciept.CarID);
+                    tr = new Transactions()
+                    {
+                        AccountID = exportReciept.CarID,
+                        AccountType = (int)AccountType.Car,
+                        Remaining = exportReciept.Remaining,
+                        Paid = exportReciept.Paid,
+                        Type = (int)TransType.Get,
+                        Date = exportReciept.Date,
+                        OperationID = exportReciept.ID,
+                        Operation = (int)Operation.ExportReciept,
+                        UserName = exportReciept.UserName,
+                    };
+                    car.Account += exportReciept.Remaining;
+                    //update car account and add transaction
+                    _context.Entry(car).State = EntityState.Modified;
+                    _context.Transactions.Add(tr);
+
+                    //add product to car product and if product find increase quantity(Decrease products from main store)
                     foreach (var item in exportRecieptDTO.Products)
                     {
                         item.ExportReceiptID = exportReciept.ID;
@@ -138,74 +181,39 @@ namespace API_and_DataBase.Controllers
                         Product product = _context.Products.Find(item.ProductID);
                         product.Quantity -= item.Quantity;
                         _context.Entry(product).State = EntityState.Modified;
+
+                        #region Add porduct ro car store
+                        if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID) == null)
+                        {
+                            CarProduct carpr = new CarProduct()
+                            {
+                                CarID = exportReciept.CarID,
+                                ProductID = item.ProductID,
+                                Quantity = item.Quantity,
+                            };
+                            _context.CarProducts.Add(carpr);
+                        }
+                        else
+                        {
+                            CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID);
+                            carpr.Quantity += item.Quantity;
+                            _context.Entry(carpr).State = EntityState.Modified;
+                        }
+                        #endregion
+
                     }
                 }
                 #endregion
+
+
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetExportReciept", new { id = exportReciept.ID }, exportReciept.ExportRecieptToDTO());
             }
-
-            #endregion
-
-
-            /////////////////////////
-
-            #region sell to Car
-            else
+            catch(Exception ex) 
             {
-
-                Car car = _context.Cars.Find(exportReciept.CarID);
-                tr = new Transactions()
-                {
-                    AccountID = exportReciept.CarID,
-                    AccountType = (int)AccountType.Car,
-                    Remaining = exportReciept.Remaining,
-                    Paid = exportReciept.Paid,
-                    Type = (int)TransType.Get,
-                    Date = exportReciept.Date,
-                    OperationID = exportReciept.ID,
-                    Operation = (int)Operation.ExportReciept,
-                    UserName = exportReciept.UserName,
-                };
-                car.Account += exportReciept.Remaining;
-                //update car account and add transaction
-                _context.Entry(car).State = EntityState.Modified;
-                _context.Transactions.Add(tr);
-
-                //add product to car product and if product find increase quantity(Decrease products from main store)
-                foreach (var item in exportRecieptDTO.Products)
-                {
-                    item.ExportReceiptID = exportReciept.ID;
-                    _context.ExportProducts.Add(item.DTOToExportProduct());
-
-                    Product product = _context.Products.Find(item.ProductID);
-                    product.Quantity -= item.Quantity;
-                    _context.Entry(product).State = EntityState.Modified;
-
-                    #region Add porduct ro car store
-                    if (_context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID) == null)
-                    {
-                        CarProduct carpr = new CarProduct()
-                        {
-                            CarID = exportReciept.CarID,
-                            ProductID = item.ProductID,
-                            Quantity = item.Quantity,
-                        };
-                        _context.CarProducts.Add(carpr);
-                    }
-                    else
-                    {
-                        CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID);
-                        carpr.Quantity += item.Quantity;
-                        _context.Entry(carpr).State = EntityState.Modified;
-                    }
-                    #endregion
-
-                }
+                return BadRequest(ex.Message);
             }
-            #endregion
-
-
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetExportReciept", new { id = exportReciept.ID }, exportReciept.ExportRecieptToDTO());
+          
         }
         // DELETE: api/ExportReciept/5
         [HttpDelete("{id}")]
