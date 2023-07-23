@@ -1,0 +1,102 @@
+<html style="direction: rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+
+    <style>
+ 
+      .column {
+        float: left;
+      }
+
+      /* Clear floats after the columns */
+      .row {
+        display: flex;
+      }
+      table {
+        border: none;
+        border-collapse:separate; 
+        border-spacing: 0 .75em;
+      }
+      tbody tr {font-size: 20px;}
+  
+    </style>
+  </head>
+  <div id="Print">
+    <div  >
+      <div style="padding: 15px">
+        <!-- Mian Reciept Data  -->
+        <div>
+          <div style="display: flex; text-align:center;">
+            <p style="text-align: center; font-size: 22px; font-weight: bold">
+              فاتورة توريد عربة
+            </p>
+          </div>
+          <div style="display: flex; text-align: center;">
+            <div style="float: right; width: 33.33%;">
+                <p style="font-size: 12pt;">التاريخ: [ExportRecieptDate]</p>
+            </div>
+            <div style="float: right; width: 33.33%;">
+                <p style="font-size: 12pt;">الوقت: [ExportRecieptTime]</p>
+            </div>
+            <div class="column" style="width: 33.33%;">
+                <p style="font-size: 12pt;">المستخدم: [ExportRecieptUserName]</p>
+            </div>
+        </div>
+          <br>
+          <div>
+            <div>
+              <p style="text-align: center;font-size: 16px; font-weight: bold;"> العربة : [CarName]</p>
+            </div>
+          </div>
+        </div>
+        <hr style="width:100%; border: 2px solid black;" >
+        <br>
+        <!-- Reciept Product Data  -->
+        <div>
+          <table style="width:100%" >
+
+            <tbody>
+              <tr style="font-weight: bold;">
+                <td style="text-align: center;">الصنف</td>
+                <td style="text-align: center;">الكمية</td>
+                <td style="text-align: center;">سعر البيع</td>
+                <td style="text-align: center;">الاجمالي</td>
+            </tr>
+              [RecieptProducts]
+            </tbody>
+        </table>
+        </div>
+        <br>
+        <hr style="width:100%; border: 2px solid black;" >
+        <br>
+        <!-- Reciept Finicial Data -->
+        <div>
+          <div style="display: flex; justify-content: center">
+            <p style="text-align: center; font-size: 18px; font-weight: bold">
+              حساب الفاتورة
+            </p>
+          </div>
+          <div style="display: flex; text-align: center;">
+            <div style="float: right; width: 50%;">
+                <p style="font-size: 12pt;">الاجمالي  : [ExportRecieptTotal]</p>
+            </div>
+            <div style="float: right; width: 50%;">
+                <p style="font-size: 12pt;">المبلغ المدفوع  : [ExportRecieptPaid]</p>
+            </div>
+            <div class="column" style="width: 50%;">
+              <p style="font-size: 12pt;"> المبلغ المتبقى : [ExportRecieptRemain]</p>
+          </div>
+
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<footer></footer>-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+</html>

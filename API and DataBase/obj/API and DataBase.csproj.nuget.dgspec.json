@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
+    "E:\\Personal\\Mokthar\\Github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {}
   },
   "projects": {
-    "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
+    "E:\\Personal\\Mokthar\\Github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "projectUniqueName": "E:\\Personal\\Mokthar\\Github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
         "projectName": "API and DataBase",
-        "projectPath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
-        "packagesPath": "C:\\Users\\ahmed_seddek\\.nuget\\packages\\",
-        "outputPath": "D:\\Hamzawy\\Study\\Projects\\API\\ElMoktar API\\Old Version\\Final-Project-API\\API and DataBase\\obj\\",
+        "projectPath": "E:\\Personal\\Mokthar\\Github\\Final-Project-API\\API and DataBase\\API and DataBase.csproj",
+        "packagesPath": "C:\\Users\\AMaher\\.nuget\\packages\\",
+        "outputPath": "E:\\Personal\\Mokthar\\Github\\Final-Project-API\\API and DataBase\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ahmed_seddek\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\AMaher\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -104,7 +108,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

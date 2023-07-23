@@ -115,18 +115,24 @@ namespace API_and_DataBase.Controllers
         {
             DateTime date = Convert.ToDateTime(sdate);
             DateTime Edta = Convert.ToDateTime(edate);
-            List<Transactions> transactionsss = await (from t in _context.Transactions
+            var transactionsss = await (from t in _context.Transactions
                                                        join u in _context.Users on t.UserName equals u.UserName
+                                                       join c in _context.Customers on t.AccountID equals c.ID
+                                                       
                                                        where u.Type == (int)userType.Car && t.Date.Date >= date.Date && t.Date.Date <= Edta.Date && t.ISDeleted == false
                                                        && u.CarID == carid && (t.Operation == (int)Operation.ExportReciept || t.Operation == (int)Operation.CustomerTrans)
-                                                       select t).ToListAsync();
+                                                       select  new
+                                                       {
+                                                           Transactions=t,
+                                                           Name = c.Name
+                                                       }).ToListAsync();
 
-            decimal? Sell = transactionsss.Where(w => w.Type == (int)TransType.Get && w.Operation == (int)Operation.ExportReciept).Sum(w => w.Paid + w.Remaining);
-            decimal? Collect = transactionsss.Where(w => w.Type == (int)TransType.Get && w.Operation == (int)Operation.CustomerTrans).Sum(w => w.Paid);
+            decimal? Sell = transactionsss.Where(w => w.Transactions.Type == (int)TransType.Get && w.Transactions.Operation == (int)Operation.ExportReciept).Sum(w => w.Transactions.Paid + w.Transactions.Remaining);
+            decimal? Collect = transactionsss.Where(w => w.Transactions.Type == (int)TransType.Get && w.Transactions.Operation == (int)Operation.CustomerTrans).Sum(w => w.Transactions.Paid);
 
             return Ok(new
             {
-                Transactions = transactionsss,
+                transactionandname = transactionsss,
                 Paid = Sell,
                 Get = Collect
             });
@@ -188,7 +194,7 @@ namespace API_and_DataBase.Controllers
             
             if (carid != null)
             {
-                Receipts = Receipts.Where(x => x.Type == (int)userType.Car).ToList();
+                Receipts = Receipts.Where(x => x.Type == (int)userType.Car && x.CarID == carid).ToList();
             }
             else
             {
