@@ -115,6 +115,7 @@ namespace API_and_DataBase.Controllers
 
                 Product product = _context.Products.Find(item.ProductID);
                 product.Quantity += item.Quantity;
+                product.ISDeleted= false;
                 _context.Entry(product).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();

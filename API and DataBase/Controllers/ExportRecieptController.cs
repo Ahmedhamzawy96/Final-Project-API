@@ -196,6 +196,7 @@ namespace API_and_DataBase.Controllers
                         else
                         {
                             CarProduct carpr = _context.CarProducts.FirstOrDefault(w => w.ProductID == item.ProductID && w.CarID == exportReciept.CarID);
+                            carpr.ISDeleted = false ;
                             carpr.Quantity += item.Quantity;
                             _context.Entry(carpr).State = EntityState.Modified;
                         }
