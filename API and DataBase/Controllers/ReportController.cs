@@ -124,7 +124,7 @@ namespace API_and_DataBase.Controllers
                                                        select  new
                                                        {
                                                            Transactions=t,
-                                                           Name = c.Name
+                                                           custname = c.Name
                                                        }).ToListAsync();
 
             decimal? Sell = transactionsss.Where(w => w.Transactions.Type == (int)TransType.Get && w.Transactions.Operation == (int)Operation.ExportReciept).Sum(w => w.Transactions.Paid + w.Transactions.Remaining);
