@@ -177,58 +177,66 @@ namespace API_and_DataBase.Controllers
         [HttpPost("CustomerAccount/{total}/{totalpaid}")]
         public async Task<IActionResult> CustomerAccount(List<TransactionsDTO> model,decimal total, decimal totalpaid)
         {
-    
 
-
-            Customer cust = _context.Customers.FirstOrDefault(w => w.ID == model[0].AccountID);
-
-            var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\CustTrans.html");
-           StringBuilder TransDiv = new StringBuilder();
-            foreach (var item in model)
+            try
             {
-                if( item.Operation==2)
+                Customer cust = _context.Customers.FirstOrDefault(w => w.ID == model[0].AccountID);
+
+                var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\CustTrans.html");
+                StringBuilder TransDiv = new StringBuilder();
+                foreach (var item in model)
                 {
-                    item.UserName = item.OperationID + "فاتورة بيع رقم ";
+                    if (item.Operation == 2)
+                    {
+                        item.UserName = item.OperationID + "فاتورة بيع رقم ";
 
+                    }
+                    else if (item.Operation == 5 && item.Type == 1)
+                    {
+                        item.UserName = item.ID + "  توريد مبلغ مالى ";
+
+                    }
+                    else if (item.Operation == 5 && item.Type == 0)
+                    {
+                        item.UserName = item.ID + "دفع مبلغ مالى ";
+
+                    }
+
+
+                    TransDiv.Append(
+
+                        $"<tr>\r\n  " +
+                        $"  <td style=\"text-align: center;\">{item.Name}</td>\r\n   " +
+                        $" <td style=\"text-align: center;\">{(item.Paid + item.Remaining).ToString()}</td>\r\n  " +
+                        $"  <td style=\"text-align: center;\">{item.Paid.ToString()}</td>\r\n    " +
+                        $"<td style=\"text-align: center;\">{item.UserName.ToString()}\r\n" +
+                        $" <td style=\"text-align: center;\">{item.Date}</td>" +
+                        $" <td style=\"text-align: center;\">{item.Notes}</td>" +
+                        $"</tr>"
+                        );
                 }
-                else if( item.Operation==5&&item.Type==1)
+                data = data.Replace("[Date]", DateTime.UtcNow.AddHours(2).ToString("dd-MM-yyyy"))
+                    .Replace("[Time]", DateTime.UtcNow.AddHours(2).ToString("hh:mm:ss tt"))
+                    .Replace("[CustomerName]", cust.Name)
+                    .Replace("[Total]", total.ToString())
+                    .Replace("[Paid]", totalpaid.ToString())
+                    .Replace("[Account]", cust.Account.ToString())
+                    .Replace("[CustTrans]", TransDiv.ToString());
+                HtmlToPdfConverter pdf = new HtmlToPdfConverter()
                 {
-                    item.UserName = item.ID + "  توريد مبلغ مالى ";
+                    Size = PageSize.A6
+                };
 
-                }
-                else if (item.Operation == 5 && item.Type == 0)
-                {
-                    item.UserName = item.ID + "دفع مبلغ مالى ";
-
-                }
-
-
-                TransDiv.Append(
-
-                    $"<tr>\r\n  " +
-                    $"  <td style=\"text-align: center;\">{item.Name}</td>\r\n   " +
-                    $" <td style=\"text-align: center;\">{(item.Paid + item.Remaining).ToString()}</td>\r\n  " +
-                    $"  <td style=\"text-align: center;\">{item.Paid .ToString()}</td>\r\n    " +
-                    $"<td style=\"text-align: center;\">{item.UserName.ToString()}\r\n" +
-                    $" <td style=\"text-align: center;\">{item.Date}</td>" +
-                    $" <td style=\"text-align: center;\">{item.Notes}</td>" +
-                    $"</tr>"
-                    );
+                byte[] pdfBytes = pdf.GeneratePdf(data);
+                return Ok(pdfBytes);
             }
-            data = data.Replace("[Date]", DateTime.UtcNow.AddHours(2).ToString("dd-MM-yyyy"))
-                .Replace("[Time]", DateTime.UtcNow.AddHours(2).ToString("hh:mm:ss tt"))
-                .Replace("[CustomerName]", cust.Name)
-                .Replace("[Total]", total.ToString())
-                .Replace("[Paid]", totalpaid.ToString())
-                .Replace("[Account]", cust.Account.ToString())
-                .Replace("[CustTrans]", TransDiv.ToString());
-            HtmlToPdfConverter pdf = new HtmlToPdfConverter()
+            catch(Exception ex)
             {
-                Size = PageSize.A6
-            };
+                return BadRequest(ex.Message);
+            }
 
-            byte[] pdfBytes = pdf.GeneratePdf(data);
-            return Ok(pdfBytes);
+
+          
         }
     }
 }

@@ -144,18 +144,23 @@ namespace API_and_DataBase.Controllers
         {
             DateTime date = Convert.ToDateTime(sdate);
             DateTime Edta = Convert.ToDateTime(edate);
-            List<Transactions> transactionsss = await (from t in _context.Transactions
+           var transactionsss = await (from t in _context.Transactions
                                                        join u in _context.Users on t.UserName equals u.UserName
+                                                       join cu in _context.Customers on t.AccountID equals cu.ID
                                                        where u.Type != (int)userType.Car && t.Date.Date >= date.Date && t.Date.Date <= Edta.Date && t.ISDeleted == false
                                                        && t.Operation != (int)Operation.Expense
-                                                       select t).ToListAsync();
+                                                       select new
+                                                       {
+                                                           Transactions = t,
+                                                           custname = cu.Name
+                                                       }).ToListAsync();
 
-            decimal? Get = transactionsss.Where(w => w.Type == (int)TransType.Get).Sum(w => w.Paid);
-            decimal? Paid = transactionsss.Where(w => w.Type == (int)TransType.Paid).Sum(w => w.Paid);
+            decimal? Get = transactionsss.Where(w => w.Transactions.Type == (int)TransType.Get).Sum(w => w.Transactions.Paid);
+            decimal? Paid = transactionsss.Where(w => w.Transactions.Type == (int)TransType.Paid).Sum(w => w.Transactions.Paid);
 
             return Ok(new
             {
-                transactions = transactionsss,
+                transactionandname = transactionsss,
                 Paid = Paid,
                 Get = Get,
             });
