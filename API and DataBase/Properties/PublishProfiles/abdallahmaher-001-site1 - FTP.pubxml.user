@@ -8,21 +8,21 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword />
     <_PublishTargetUrl>ftp://win8044.site4now.net:21/elmokhtar</_PublishTargetUrl>
-    <History>True|2023-07-23T14:46:35.4155828Z;False|2023-07-23T17:33:03.2054558+03:00;True|2023-07-23T17:14:44.7528431+03:00;False|2023-07-23T17:11:43.3646810+03:00;True|2023-03-22T10:20:53.4887476+02:00;False|2023-03-22T10:11:13.5511349+02:00;False|2023-03-22T10:08:19.8126285+02:00;False|2023-03-22T01:21:41.6490751+02:00;</History>
+    <History>True|2023-07-24T21:09:15.2939291Z;True|2023-07-24T18:33:35.3052914+03:00;False|2023-07-24T18:29:55.4790905+03:00;True|2023-07-24T18:20:47.3626776+03:00;False|2023-07-24T18:18:37.5107540+03:00;True|2023-07-23T17:46:35.4155828+03:00;False|2023-07-23T17:33:03.2054558+03:00;True|2023-07-23T17:14:44.7528431+03:00;False|2023-07-23T17:11:43.3646810+03:00;True|2023-03-22T10:20:53.4887476+02:00;False|2023-03-22T10:11:13.5511349+02:00;False|2023-03-22T10:08:19.8126285+02:00;False|2023-03-22T01:21:41.6490751+02:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
     <File Include="API and DataBase.deps.json">
-      <publishTime>07/23/2023 17:45:22</publishTime>
+      <publishTime>07/24/2023 18:32:19</publishTime>
     </File>
     <File Include="API and DataBase.dll">
-      <publishTime>07/23/2023 17:45:21</publishTime>
+      <publishTime>07/25/2023 00:08:06</publishTime>
     </File>
     <File Include="API and DataBase.exe">
-      <publishTime>07/23/2023 17:45:21</publishTime>
+      <publishTime>07/25/2023 00:08:06</publishTime>
     </File>
     <File Include="API and DataBase.pdb">
-      <publishTime>07/23/2023 17:45:21</publishTime>
+      <publishTime>07/25/2023 00:08:06</publishTime>
     </File>
     <File Include="API and DataBase.runtimeconfig.json">
       <publishTime>07/23/2023 17:10:20</publishTime>
@@ -688,7 +688,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/14/2021 20:38:18</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>07/23/2023 17:45:22</publishTime>
+      <publishTime>07/24/2023 18:32:19</publishTime>
     </File>
     <File Include="zh-Hans/Microsoft.CodeAnalysis.CSharp.Features.resources.dll">
       <publishTime>10/14/2021 20:43:18</publishTime>

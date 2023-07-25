@@ -9,6 +9,9 @@ using API_and_DataBase.Models;
 using API_and_DataBase.DTO.Extension_Methods;
 using API_and_DataBase.DTO;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using NReco.PdfGenerator;
+using System.Text;
 
 namespace API_and_DataBase.Controllers
 {
@@ -19,10 +22,12 @@ namespace API_and_DataBase.Controllers
     public class ProductController : ControllerBase
     {
         private readonly CompanyContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(CompanyContext context)
+        public ProductController(CompanyContext context, IWebHostEnvironment WebHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = WebHostEnvironment;
         }
 
         // GET: api/Product
@@ -159,6 +164,40 @@ namespace API_and_DataBase.Controllers
         {
             return await _context.Products.Where(x => !x.ISDeleted && x.Quantity <= Quantity).Select(x => x.ProductToDTO()).ToListAsync();
         }
- 
+        [HttpPost("printproductquntity")]
+        public async Task<IActionResult> GetProductsByQuantity(List<Product> model)
+        {
+
+
+            var data = System.IO.File.ReadAllText(_webHostEnvironment.ContentRootPath + "Templates\\ProductQuantity.html");
+            StringBuilder ProdQty = new StringBuilder();
+            foreach (var item in model)
+            {
+               
+                ProdQty.Append(
+
+                    $"<tr>\r\n  " +
+                    $"  <td style=\"text-align: center;\">{item.Name}</td>\r\n   " +
+                    $" <td style=\"text-align: center;\">{(item.Quantity).ToString()}</td>\r\n  " +
+                    $"  <td style=\"text-align: center;\">{item.BuyingPrice.ToString()}</td>\r\n    " +
+                    $"<td style=\"text-align: center;\">{item.SellingPrice.ToString()}\r\n" +
+                    $"</tr>"
+                    );
+            }
+            data = data.Replace("[Date]", DateTime.UtcNow.AddHours(2).ToString("dd-MM-yyyy"))
+                .Replace("[Time]", DateTime.UtcNow.AddHours(2).ToString("hh:mm:ss tt"))
+                 .Replace("[ProductQTY]", ProdQty.ToString());
+
+
+            HtmlToPdfConverter pdf = new HtmlToPdfConverter()
+            {
+                Size = PageSize.A6
+            };
+
+            byte[] pdfBytes = pdf.GeneratePdf(data);
+            return Ok(pdfBytes);
+        }
+
+
     }
 }
