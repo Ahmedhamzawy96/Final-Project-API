@@ -1,4 +1,4 @@
-﻿using API_and_DataBase.DTO;
+using API_and_DataBase.DTO;
 using API_and_DataBase.DTO.Extension_Methods;
 using API_and_DataBase.Models;
 using API_and_DataBase.Structures;
@@ -180,7 +180,7 @@ namespace API_and_DataBase.Controllers
                                   join P in _context.Products on ep.ProductID equals P.ID
                                   join cu in _context.Customers on er.CustomerID equals cu.ID
                                   where er.ISDeleted == false && er.Date.Date >= date.Date && er.Date.Date <= Edta.Date
-                                  group new { P, ep } by new { u.UserName, u.Type, er.ID, er.CustomerID, u.CarID, er.Date,cu.Name } into g
+                                  group new { P, ep } by new { u.UserName, u.Type, er.ID, er.CustomerID, u.CarID, er.Date,cu.Name,er.Total } into g
                                   orderby g.Key.ID
                                   select new
                                   {
@@ -189,7 +189,7 @@ namespace API_and_DataBase.Controllers
                                       ID = g.Key.ID,
                                       CustomerID = g.Key.CustomerID,
                                       CustomerName = g.Key.Name,
-                                      SellingPrice = g.Sum(x => x.ep.Price * x.ep.Quantity),
+                                      SellingPrice = g.Key.Total,
                                       BuyingPrice = g.Sum(x => x.P.BuyingPrice * x.ep.Quantity),
                                       CarID = g.Key.CarID,
                                       Date = g.Key.Date.ToString("yyyy-mm-dd"),
