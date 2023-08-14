@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+*.vsidx
+*.v2
+API and DataBase/.vs/API and DataBase/v17/.futdcache.v2
+*.bin
