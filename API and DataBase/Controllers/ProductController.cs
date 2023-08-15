@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -180,7 +180,6 @@ namespace API_and_DataBase.Controllers
                     $"  <td style=\"text-align: center;\">{item.Name}</td>\r\n   " +
                     $" <td style=\"text-align: center;\">{(item.Quantity).ToString()}</td>\r\n  " +
                     $"  <td style=\"text-align: center;\">{item.BuyingPrice.ToString()}</td>\r\n    " +
-                    $"<td style=\"text-align: center;\">{item.SellingPrice.ToString()}\r\n" +
                     $"</tr>"
                     );
             }
